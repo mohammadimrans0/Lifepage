@@ -1,9 +1,10 @@
+import PostsPage from './posts/page'
 
 export default function Home() {
   return (
     <div className="">
-      
-      <h1>Hlw world</h1>
+      {/* posts */}
+      <PostsPage/>
     </div>
   );
 }
