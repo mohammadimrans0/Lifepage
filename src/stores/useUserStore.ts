@@ -91,9 +91,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
     try {
       const response = await axios.get(`https://lifepage-server.onrender.com/api/user/profiles/${userId}`);
-      const profile = response.data; // Assuming the API returns the profile object
-      set({ profile }); // Update Zustand state with the fetched profile
-      console.log('Profile fetched successfully:', profile);
+      const profile = response.data;
+      set({ profile });
     } catch (error: any) {
       console.error('Error fetching profile:', error.response?.data || error.message);
       alert(error.response?.data?.detail || 'Failed to fetch profile. Please try again.');

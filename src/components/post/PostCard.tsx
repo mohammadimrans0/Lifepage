@@ -2,6 +2,7 @@ import React from 'react';
 import { Post } from '@/stores/usePostStore';
 import { usePostStore } from '@/stores/usePostStore';
 import { Heart, MessageCircle, Bookmark } from 'lucide-react';
+import Image from "next/image";
 
 interface PostCardProps {
   post: Post;
@@ -19,22 +20,32 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-4 mb-4 border border-gray-200">
+    <div className="bg-white shadow-lg rounded-2xl p-4 mb-4 border border-gray-200 w-[450px]">
       {/* User Info */}
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
         <div>
-          <p className="font-semibold">{post.user}</p>
+          <Image
+          src={post.userDetails.image}
+          alt='User'
+          width={48}
+          height={48}
+          className="rounded-full"
+          />
+        </div>
+        <div>
+          <p className="font-semibold">{post.userDetails.user.username}</p>
           <p className="text-sm text-gray-500">{new Date(post.created_at).toLocaleString()}</p>
         </div>
       </div>
 
       {/* Post Image */}
       <div className="rounded-lg overflow-hidden mb-4">
-        <img
+        <Image
           src={post.image}
           alt="Post"
-          className="w-full h-auto object-cover max-h-96"
+          width={450}
+          height={450}
+          className="object-cover max-h-96"
         />
       </div>
 

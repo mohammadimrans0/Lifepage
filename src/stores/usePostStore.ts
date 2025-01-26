@@ -3,6 +3,7 @@ import axios from 'axios';
 // import { toast } from 'react-toastify';
 
 export interface Post {
+  userDetails: any;
   id: string;
   user: string;
   image: string;
@@ -61,12 +62,31 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Fetch all posts
   fetchPosts: async () => {
     try {
+      // Step 1: Fetch all posts
       const response = await axios.get(`${BASE_URL}posts/`);
-      set({ posts: response.data });
+      const posts = response.data;
+  
+      // Step 2: Fetch user details for each post
+      const updatedPosts = await Promise.all(
+        posts.map(async (post: any) => {
+          try {
+            const userResponse = await axios.get(
+              `https://lifepage-server.onrender.com/api/user/profiles/${post.user}/`
+            ); // Assuming user details endpoint
+            return { ...post, userDetails: userResponse.data };
+          } catch (error) {
+            console.error(`Failed to fetch user details for user ID: ${post.user}`, error);
+            return { ...post, userDetails: null };
+          }
+        })
+      );
+  
+      // Step 3: Update the store with posts that include user details
+      set({ posts: updatedPosts });
     } catch (error) {
       console.error('Failed to fetch posts:', error);
     }
-  },
+  },  
 
   // Fetch all user posts
   fetchUserPosts: async () => {
