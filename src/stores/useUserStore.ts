@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
-// import { useRouter } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation'
 import { toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -58,12 +58,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
         localStorage.setItem('user_id', userId);
         toast.success('Login successful! Redirecting...');
         setTimeout(() => {
-          router.push('/'); 
+          permanentRedirect('/');
         }, 2000);
       } else {
         throw new Error('User ID not found in the response.');
       }
-    } catch (error) {
+    } catch (error : any) {
       toast.error('Login error:', error.response?.data || error.message);
     }
   },

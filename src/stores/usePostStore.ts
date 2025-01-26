@@ -21,6 +21,7 @@ interface Comment {
 }
 
 interface Bookmark {
+  postDetails: any;
   id: string;
   post: string;
   user: string;
