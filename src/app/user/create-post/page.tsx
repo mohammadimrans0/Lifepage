@@ -2,6 +2,7 @@
 
 import { usePostStore } from "@/stores/usePostStore";
 import { useState } from "react";
+import { Camera, Send } from "lucide-react"
 
 const AddPost = () => {
   const { createPost, userId } = usePostStore();
@@ -42,53 +43,66 @@ const AddPost = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-    <div className="p-4  mx-auto bg-white rounded-lg shadow-lg">
-      <h2 className="text-xl text-center font-semibold text-gray-800 mb-4">Create a Post</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label
-            htmlFor="image"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Upload Image
-          </label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            className="mt-1 block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring focus:ring-blue-300"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              setImage(file || null);
-            }}
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="caption"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Caption
-          </label>
-          <textarea
-            id="caption"
-            rows={3}
-            placeholder="Write a caption..."
-            className="mt-1 block w-full text-sm border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-        >
-          {isSubmitting ? "Posting..." : "Post"}
-        </button>
-      </form>
-    </div>
+    <div className="p-6 sm:p-8 md:p-12 flex items-center justify-center">
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+              Upload Image
+            </label>
+            <div className="flex items-center space-x-2">
+              <label
+                htmlFor="image"
+                className="flex items-center justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
+              >
+                <span className="flex items-center space-x-2">
+                  <Camera className="w-6 h-6 text-gray-600" />
+                  <span className="font-medium text-gray-600">{image ? image.name : "Click to upload"}</span>
+                </span>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    setImage(file || null)
+                  }}
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="caption" className="block text-sm font-medium text-gray-700">
+              Caption
+            </label>
+            <textarea
+              id="caption"
+              rows={4}
+              placeholder="What's on your mind..."
+              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`flex items-center space-x-2 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg transition-all duration-200 ease-in-out ${
+                isSubmitting
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:from-blue-600 hover:to-purple-700 hover:shadow-lg"
+              }`}
+            >
+              <span>{isSubmitting ? "Posting..." : "Post"}</span>
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

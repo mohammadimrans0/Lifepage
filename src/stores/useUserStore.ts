@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { permanentRedirect } from 'next/navigation'
-import { toast } from 'react-toastify'; 
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 type UserProfile = {
   user: any;
@@ -51,12 +50,15 @@ export const useUserStore = create<UserStore>((set, get) => ({
   // Function to handle login
   login: async (data) => {
     try {
-      const response = await axios.post('https://lifepage-server.onrender.com/api/user/auth/login/', data);
-      console.log(response)
-      const userId = response.data?.user_id; // Assuming the API returns a `user_id`
+      const response = await axios.post('https://lifepage-server.onrender.com/api/user/login/', data);
+      const userId = response.data?.user_id;
+      const token = response.data?.token;
       if (userId) {
         localStorage.setItem('user_id', userId);
+        localStorage.setItem('token', token);
+
         toast.success('Login successful! Redirecting...');
+
         setTimeout(() => {
           permanentRedirect('/');
         }, 2000);
@@ -71,15 +73,20 @@ export const useUserStore = create<UserStore>((set, get) => ({
   // Function to handle logout
   logout: async () => {
     try {
-      await axios.post('https://lifepage-server.onrender.com/api/user/auth/logout/');
-      localStorage.removeItem('user_id'); // Clear user ID from localStorage
-      set({ userId: null, profile: null }); // Clear Zustand state
-      alert('Logged out successfully.');
+      await axios.post('https://lifepage-server.onrender.com/api/user/logout/');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('token');
+      set({ userId: null, profile: null });
+      toast.success('Logged out successfully.');
+
+      setTimeout(() => {
+        permanentRedirect('/auth/login');
+      }, 2000);
     } catch (error: any) {
       console.error('Logout error:', error.response?.data || error.message);
-      toast.error(error.response?.data?.detail || 'Logout failed. Please try again.');
+      toast.error(error.response?.data?.detail || `Logout failed. Status: ${error.response?.status}`);
     }
-  },
+  },  
 
   // Function to fetch the user's profile
   fetchProfile: async () => {
@@ -101,7 +108,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   // Function to update the user's profile
   updateProfile: async (data) => {
-    const userId = get().userId; // Get the current user ID from the store
+    const userId = get().userId;
     if (!userId) {
       console.warn('User ID not found. Cannot update profile.');
       return;
@@ -109,8 +116,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
     try {
       const response = await axios.put(`https://lifepage-server.onrender.com/api/user/profiles/${userId}/`, data);
-      const updatedProfile = response.data; // Assuming the API returns the updated profile object
-      set({ profile: updatedProfile }); // Update Zustand state with the updated profile
+      const updatedProfile = response.data;
+      set({ profile: updatedProfile });
       console.log('Profile updated successfully:', updatedProfile);
       alert('Profile updated successfully.');
     } catch (error: any) {

@@ -1,23 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useUserStore } from '@/stores/useUserStore';
-import Link from 'next/link';
-
-/**
- * 
-{
-"username" : "rahims0",
-"password" : "rahi1234"
-}
- * 
- */
+import { useState } from "react";
+import { useUserStore } from "@/stores/useUserStore";
+import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage: React.FC = () => {
   const login = useUserStore((state) => state.login);
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,38 +26,42 @@ const LoginPage: React.FC = () => {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="border rounded-lg shadow-lg p-8">
-      <h2 className="text-3xl text-center font-bold mb-6">Login</h2>
-      <form onSubmit={handleSubmit} className='space-y-6'>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <button
-          type="submit"
-          className=" w-full bg-blue-500 text-white p-2 rounded"
-        >
-          Login
-        </button>
-      </form>
+        <h2 className="text-3xl text-center font-bold mb-6">Login</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <button
+            type="submit"
+            className=" w-full bg-blue-500 text-white p-2 rounded"
+          >
+            Login
+          </button>
+        </form>
 
-      <p className="mt-2">
-  {"Don't have an account?"} <Link href="/auth/signup" className="text-blue-500">Signup</Link>
-</p>
+        <p className="mt-2">
+          {"Don't have an account?"}{" "}
+          <Link href="/auth/signup" className="text-blue-500">
+            Signup
+          </Link>
+        </p>
       </div>
+      <ToastContainer />
     </div>
   );
 };
