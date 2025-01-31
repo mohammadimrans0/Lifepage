@@ -7,8 +7,6 @@ import PostCard from '@/components/post/PostCard';
 const PostsPage: React.FC = () => {
   const { posts, fetchPosts } = usePostStore();
 
-  console.log(posts);
-
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);

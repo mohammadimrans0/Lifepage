@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { BookmarkType, Post } from '@/stores/usePostStore';
-import { usePostStore } from '@/stores/usePostStore';
-import { Heart, MessageCircle, Bookmark} from 'lucide-react';
+"use client";
+
+import { useState, useEffect } from "react";
+import { Post } from "@/stores/usePostStore";
+import { usePostStore } from "@/stores/usePostStore";
+import { Heart, MessageCircle, Bookmark } from "lucide-react";
 import Image from "next/image";
 
 interface PostCardProps {
@@ -9,77 +11,111 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const { userId, likePost, addComment, addBookmark, deleteLike, removeBookmark } = usePostStore();
+  const {
+    userId,
+    likes,
+    likePost,
+    deleteLike,
+    fetchLikes,
+    addComment,
+    addBookmark,
+    removeBookmark,
+  } = usePostStore();
 
-  const [comment, setComment] = useState<string>('');
+  const [comment, setComment] = useState<string>("");
   const [showCommentInput, setShowCommentInput] = useState<boolean>(false);
-  const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
-  // Check if the post is liked or bookmarked when it first loads
+  // Create separate states for each post's like and bookmark status
+  const [postStates, setPostStates] = useState<{ [key: string]: { liked: boolean, bookmarked: boolean } }>({});
+
+  // Fetch likes and bookmarks state asynchronously from the store
   useEffect(() => {
-    if (userId) {
-      // Check if the post is liked by the user
-      setIsLiked(post.likes.includes(userId));
-  
-      // Check if the post is bookmarked by the user
-      setIsBookmarked(
-        Array.isArray(post.bookmarks) && post.bookmarks.some((bookmark: BookmarkType) => bookmark.user === userId)
-      );
-    } else {
-      // Handle the case where userId is null (e.g., user is not logged in)
-      setIsLiked(false);
-      setIsBookmarked(false);
-    }
-  }, [post, userId]);
-  
+    const fetchPostData = async () => {
+      if (userId) {
+        const likedStatus = likes.some(
+          (like) => like.post === post.id && like.user === userId
+        );
+        const bookmarkedStatus = false; // You can implement the logic for bookmarks based on your data
 
-  const handleLike = () => {
-    if (isLiked) {
-      deleteLike(post.id); // Remove like from backend
-      setIsLiked(false);
+        // Set the states for this particular post
+        setPostStates((prevState) => ({
+          ...prevState,
+          [post.id]: {
+            liked: likedStatus,
+            bookmarked: bookmarkedStatus,
+          },
+        }));
+      }
+    };
+
+    fetchPostData();
+    fetchLikes(post.id);
+  }, [post, userId, fetchLikes, likes]);
+
+  const handleLikeToggle = async () => {
+    if (postStates[post.id]?.liked) {
+      // If post is already liked, delete like
+      if (userId) {
+        deleteLike(userId, post.id);
+      }
     } else {
-      likePost({ post: post.id, user: userId }); // Add like to backend
-      setIsLiked(true);
+      likePost({ post: post.id, user: userId });
     }
+
+    // Update the like status for this post
+    setPostStates((prevState) => ({
+      ...prevState,
+      [post.id]: {
+        ...prevState[post.id],
+        liked: !prevState[post.id]?.liked,
+      },
+    }));
   };
 
-  const handleBookmark = () => {
-    if (isBookmarked) {
-      removeBookmark(post.id); // Remove bookmark from backend
-      setIsBookmarked(false);
+  const handleBookmark = async () => {
+    if (postStates[post.id]?.bookmarked) {
+      // If post is already bookmarked, remove bookmark
+      removeBookmark(post.id);
     } else {
-      addBookmark({ post: post.id, user: userId }); // Add bookmark to backend
-      setIsBookmarked(true);
+      addBookmark({ post: post.id, user: userId });
     }
+
+    // Update the bookmark status for this post
+    setPostStates((prevState) => ({
+      ...prevState,
+      [post.id]: {
+        ...prevState[post.id],
+        bookmarked: !prevState[post.id]?.bookmarked,
+      },
+    }));
   };
 
   const handleAddComment = () => {
     if (comment.trim()) {
       addComment({ comment, post: post.id, user: userId });
-      setComment('');
+      setComment("");
     }
   };
 
   return (
     <div className="bg-white shadow-lg rounded-2xl p-4 mb-4 border border-gray-200 w-[450px]">
       <div className="flex items-center gap-4 mb-4">
-        <div>
-          <Image
-            src={post.userDetails.image}
-            alt="User"
-            width={48}
-            height={48}
-            className="rounded-full"
-          />
-        </div>
+        <Image
+          src={post.userDetails.image}
+          alt="User"
+          width={48}
+          height={48}
+          className="rounded-full"
+          priority={true}
+        />
         <div>
           <p className="font-semibold">{post.userDetails.user.username}</p>
-          <p className="text-sm text-gray-500">{new Date(post.created_at).toLocaleString()}</p>
+          <p className="text-sm text-gray-500">
+            {new Date(post.created_at).toLocaleString()}
+          </p>
         </div>
       </div>
 
-      {/* Post Image */}
       <div className="rounded-lg overflow-hidden mb-4">
         <Image
           src={post.image}
@@ -90,37 +126,44 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         />
       </div>
 
-      {/* Caption */}
       <div className="mb-4">
         <p className="text-sm text-gray-800">{post.caption}</p>
       </div>
 
-      {/* Actions */}
       <div className="flex items-center justify-between mb-4">
         <button
-          onClick={handleLike}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium "
+          onClick={handleLikeToggle}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
         >
-          <Heart className={`w-5 h-5 ${isLiked ? 'text-red-500' : 'text-gray-500'}`} />
+          <Heart
+            size={20}
+            fill={postStates[post.id]?.liked ? "red" : "none"}
+            color={postStates[post.id]?.liked ? "red" : "currentColor"}
+          />
           <span>{post.no_of_likes} Likes</span>
         </button>
+
         <button
           onClick={() => setShowCommentInput(!showCommentInput)}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
         >
-          <MessageCircle className="w-5 h-5 text-gray-500" />
+          <MessageCircle size={20} />
           <span>{post.no_of_comments} Comments</span>
         </button>
+
         <button
           onClick={handleBookmark}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
         >
-          <Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-yellow-500' : 'text-gray-500'}`} />
-          <span>Bookmark</span>
+          <Bookmark
+            size={20}
+            fill={postStates[post.id]?.bookmarked ? "black" : "none"}
+            color={postStates[post.id]?.bookmarked ? "currentColor" : "currentColor"}
+          />
+          <span>{postStates[post.id]?.bookmarked ? "Bookmarked" : "Bookmark"}</span>
         </button>
       </div>
 
-      {/* Comment Input */}
       {showCommentInput && (
         <div className="flex items-center gap-2">
           <input
