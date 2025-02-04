@@ -129,7 +129,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Profile Info */}
-        <div className="mt-8 space-y-4">
+        {/* <div className="mt-8 space-y-4">
           <div className="flex items-center space-x-1">
             <label className="font-semibold">Email :</label>
             {renderEditableField("email", profile?.user.email)}
@@ -142,7 +142,7 @@ const ProfilePage = () => {
             <label className="font-semibold">Contact Info :</label>
             {renderEditableField("contact_info", profile.contact_info)}
           </div>
-        </div>
+        </div> */}
       </div>
 
 

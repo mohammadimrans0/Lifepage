@@ -14,7 +14,7 @@ export default function RightSidebar() {
 
   return (
     <div className="py-6">
-      <div className="mb-8 bg-white p-4 rounded-md">
+      <div className="mb-8 bg-white p-4 rounded-md border">
         <h1 className="text-xl font-semibold">Who to follow</h1>
 
         <div className="mb-8">
@@ -46,8 +46,8 @@ export default function RightSidebar() {
         </button>
       </div>
 
-      <div className="mb-8 bg-white p-4 rounded-md">
-        <h1 className="text-xl font-semibold mb-4">Today&apos;s news</h1>
+      <div className="mb-8 bg-white p-4 rounded-md border">
+        <h1 className="text-2xl font-semibold mb-4">Today&apos;s news</h1>
 
         <div className="flex flex-col gap-y-4 mb-4">
             <div>

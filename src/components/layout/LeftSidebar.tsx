@@ -3,49 +3,148 @@
 import { useEffect } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import Link from "next/link";
 
-export default function RightSidebar() {
-  const { fetchAllProfile, allProfiles } = useUserStore();
+export default function LeftSidebar() {
+  const { userId, profile, fetchProfile } = useUserStore();
 
   useEffect(() => {
-    fetchAllProfile();
-  }, [fetchAllProfile]);
+    if (userId) {
+      fetchProfile();
+    }
+  }, [userId, fetchProfile]);
 
   return (
     <div className="py-6">
-      <div className="mb-8 bg-white p-4 rounded-md">
-        <h1 className="text-xl font-semibold">Who to follow</h1>
+      <div className="mb-8 bg-white px-8 py-4 rounded-md border">
+        {/* Profile Section */}
+        <div className="flex flex-col items-center justify-center gap-y-2">
+          <Image
+            src={profile?.image || "/images/default-profile.png"}
+            alt="profile image"
+            width={64}
+            height={36}
+          />
+          <h1 className="text-2xl font-semibold">{profile?.name}</h1>
+          <p>{profile?.bio}</p>
 
-        <div className="mb-8">
-          {allProfiles.slice(0, 10).map((profile) => (
-            <div
-              key={profile.id}
-              className="flex items-center justify-between py-2"
-            >
-              <div className="flex items-center gap-3">
-                <Image
-                  src={profile.image || "/default-avatar.png"} // Fallback image
-                  alt={profile?.user.username}
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-                <span className="font-medium">{profile?.user.username}</span>
-              </div>
-
-              <button className="p-2 rounded-full bg-blue-200">
-                <Plus size={20} className="text-blue-500" />
-              </button>
+          <div className="flex items-center justify-center gap-x-6">
+            <div className="flex flex-col items-center">
+              <span className="font-semibold">{profile?.followers_count}</span>{" "}
+              Posts
             </div>
-          ))}
+            <div className="flex flex-col items-center">
+              <span className="font-semibold">{profile?.followers_count}</span>{" "}
+              Followers
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="font-semibold">{profile?.following_count}</span>{" "}
+              Following
+            </div>
+          </div>
         </div>
 
-        <button className="w-full bg-blue-100 text-blue-500 px-4 py-2 rounded-md">
-          View more
-        </button>
+        <hr className="my-4" />
+
+        <div className="flex flex-col gap-y-6 mb-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/image-icon/home-feed.svg"
+              alt="feed"
+              width={24}
+              height={16}
+            />
+            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
+              Feed
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/image-icon/connections.svg"
+              alt="feed"
+              width={24}
+              height={16}
+            />
+            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
+              Connections
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/image-icon/news.svg"
+              alt="feed"
+              width={24}
+              height={16}
+            />
+            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
+              Latest News
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/image-icon/events.svg"
+              alt="feed"
+              width={24}
+              height={16}
+            />
+            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
+              Events
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/image-icon/group.svg"
+              alt="feed"
+              width={24}
+              height={16}
+            />
+            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
+              Groups
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/image-icon/notification.svg"
+              alt="feed"
+              width={24}
+              height={16}
+            />
+            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
+              Notifications
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/image-icon/settings.svg"
+              alt="feed"
+              width={24}
+              height={16}
+            />
+            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
+              Settings
+            </p>
+          </div>
+        </div>
+
+        <Link href="/user/profile">
+          <h2 className="text- text-center text-blue-500 border-t py-2 cursor-pointer">
+            View Profile
+          </h2>
+        </Link>
       </div>
 
+      <div className="px-4 flex flex-wrap items-center justify-center gap-x-6 mb-2">
+        <p className="text-sm hover:text-blue-500 cursor-pointer">About</p>
+        <p className="text-sm hover:text-blue-500 cursor-pointer">Settings</p>
+        <p className="text-sm hover:text-blue-500 cursor-pointer">Support</p>
+        <p className="text-sm hover:text-blue-500 cursor-pointer">Docs</p>
+        <p className="text-sm hover:text-blue-500 cursor-pointer">Help</p>
+        <p className="text-sm hover:text-blue-500 cursor-pointer">
+          Privace & Terms
+        </p>
+      </div>
+
+      <p className="text-sm text-center">&copy; 2025 Lifepage</p>
     </div>
   );
 }
