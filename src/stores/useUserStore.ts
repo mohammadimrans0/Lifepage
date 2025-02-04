@@ -24,9 +24,11 @@ type UserProfile = {
 type UserStore = {
   userId: string | null;
   profile: UserProfile | null;
+  allProfiles: UserProfile[];
   signup: (data: { username: string; email: string; password: string; confirm_password: string }) => Promise<void>;
   login: (data: { username: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
+  fetchAllProfile: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
 };
@@ -34,6 +36,7 @@ type UserStore = {
 export const useUserStore = create<UserStore>((set, get) => ({
   userId: typeof window !== 'undefined' ? localStorage.getItem('user_id') || null : null,
   profile: null,
+  allProfiles: [],
 
   // Function to handle signup
   signup: async (data) => {
@@ -90,6 +93,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
       toast.error(error.response?.data?.detail || `Logout failed. Status: ${error.response?.status}`);
     }
   },  
+
+  // Function to fetch all profile
+  fetchAllProfile: async () => {
+    try {
+      const response = await axios.get(`https://lifepage-server.onrender.com/api/user/profiles/`);
+      set({ allProfiles: response.data });
+    } catch (error: any) {
+      console.error('Error fetching all profiles:', error.response?.data || error.message);
+    }
+  },
 
   // Function to fetch the user's profile
   fetchProfile: async () => {

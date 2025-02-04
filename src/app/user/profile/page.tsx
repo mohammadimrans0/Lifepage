@@ -77,7 +77,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-4xl mx-auto py-8">
+      <div className="px-16 py-8">
         {/* Profile Header */}
         <div className="flex items-center space-x-8">
           <Image
@@ -145,10 +145,9 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <hr />
 
       {/* Posts and Bookmark Section */}
-      <div className="p-8 ">
+      <div className="p-8 border-t border-slate-400">
       {/* Tab Navigation */}
       <div className="flex justify-around items-center mb-8">
         <button

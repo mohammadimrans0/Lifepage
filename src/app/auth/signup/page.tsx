@@ -32,6 +32,7 @@ const SignupPage: React.FC = () => {
       await signup(formData);
     } catch (error) {
       toast.error("Failed to create an account");
+      console.log(error)
     }
     
   };
