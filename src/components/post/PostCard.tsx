@@ -99,7 +99,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <div className="bg-white shadow-lg rounded-2xl p-4 mb-4 border border-gray-200 w-[450px]">
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-4">
         <Image
           src={post.userDetails.image}
           alt="User"
@@ -114,6 +115,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             {new Date(post.created_at).toLocaleString()}
           </p>
         </div>
+      </div>
+
+      <div>
+        <button className="px-6 py-1 border rounded-lg text-white bg-blue-500">Follow</button>
+      </div>
+
       </div>
 
       <div className="rounded-lg overflow-hidden mb-4">

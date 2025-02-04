@@ -30,10 +30,14 @@ export default function RootLayout({
       >
         <div className="m-auto lg:container">
           <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12">
-            <div className="col-span-4 lg:col-span-2"><Sidebar/></div>
-            <div className="col-span-4 lg:col-span-10 border-l-2">{children}</div>
+            <div className="col-span-4 lg:col-span-2">
+              <Sidebar />
+            </div>
+            <div className="col-span-4 lg:col-span-10 border-l-2">
+              {children}
+            </div>
           </div>
-        </div>  
+        </div>
       </body>
     </html>
   );

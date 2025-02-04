@@ -33,17 +33,20 @@ type UserStore = {
 
 export const useUserStore = create<UserStore>((set, get) => ({
   userId: typeof window !== 'undefined' ? localStorage.getItem('user_id') || null : null,
-  profile: null, // Initial state for profile data
+  profile: null,
 
   // Function to handle signup
   signup: async (data) => {
     try {
-      const response = await axios.post('https://lifepage-server.onrender.com/api/user/signup/', data);
-      console.log('Signup successful:', response.data);
-      alert('Signup successful. Please login.');
+      await axios.post('https://lifepage-server.onrender.com/api/user/signup/', data);
+      toast.success('Account created successfully! Redirecting to login.');
+
+      setTimeout(() => {
+        permanentRedirect('/auth/login');
+      }, 2000);
     } catch (error: any) {
       console.error('Signup error:', error.response?.data || error.message);
-      alert(error.response?.data?.detail || 'Signup failed. Please try again.');
+      toast.error(error.response?.data?.detail || 'Signup failed. Please try again.');
     }
   },
 
@@ -102,7 +105,6 @@ export const useUserStore = create<UserStore>((set, get) => ({
       set({ profile });
     } catch (error: any) {
       console.error('Error fetching profile:', error.response?.data || error.message);
-      alert(error.response?.data?.detail || 'Failed to fetch profile. Please try again.');
     }
   },
 
@@ -119,10 +121,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
       const updatedProfile = response.data;
       set({ profile: updatedProfile });
       console.log('Profile updated successfully:', updatedProfile);
-      alert('Profile updated successfully.');
+      toast.success('Profile updated successfully.');
     } catch (error: any) {
       console.error('Error updating profile:', error.response?.data || error.message);
-      alert(error.response?.data?.detail || 'Failed to update profile. Please try again.');
+      toast.error(error.response?.data?.detail || 'Failed to update profile. Please try again.');
     }
   },
 }));

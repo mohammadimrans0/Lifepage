@@ -5,16 +5,18 @@ import { useUserStore } from "@/stores/useUserStore";
 import Link from "next/link";
 import { Home, User, PlusCircle } from "lucide-react";
 import Image from "next/image";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const { userId, profile, fetchProfile, logout } = useUserStore();
-  const [mounted, setMounted] = useState(false); // State to track mount
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
-  // Ensures the component renders after client-side hydration
+
   useEffect(() => {
-    setMounted(true); // Set mounted to true after component is rendered
+    setMounted(true);
   }, []);
 
   useEffect(() => {
@@ -23,17 +25,26 @@ export default function Sidebar() {
     }
   }, [userId, fetchProfile]);
 
-  // Return nothing until the component is mounted on the client
   if (!mounted) {
     return null;
   }
+
+  const handleCreatePost = () => {
+    if (!userId) {
+      toast.error("Please login to create a post!");
+      router.replace("/auth/login");
+    } else {
+      router.push("/user/create-post");
+    }
+  };
+
 
   return (
     <div className="px-8">
       <div>
         <Link href="/">
         <Image
-              src="/images/image-logo.png"
+              src="/images/lifepage-logo.png"
               alt="Lifepage"
               width={150}
               height={0}
@@ -52,12 +63,13 @@ export default function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link href="/user/create-post">
-              <p className="flex items-center py-3 hover:bg-slate-300 rounded-lg cursor-pointer">
-                <PlusCircle size={36} />
-                <span className="ml-3 text-xl">Create</span>
-              </p>
-            </Link>
+            <button
+              onClick={handleCreatePost}
+              className="flex items-center py-3 hover:bg-slate-300 rounded-lg cursor-pointer w-full text-left"
+            >
+              <PlusCircle size={36} />
+              <span className="ml-3 text-xl">Create</span>
+            </button>
           </li>
           {userId ? (
             <>

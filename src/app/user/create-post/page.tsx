@@ -3,6 +3,7 @@
 import { usePostStore } from "@/stores/usePostStore";
 import { useState } from "react";
 import { Camera, Send } from "lucide-react"
+import { toast, ToastContainer } from "react-toastify";
 
 const AddPost = () => {
   const { createPost, userId } = usePostStore();
@@ -14,12 +15,12 @@ const AddPost = () => {
     e.preventDefault();
 
     if (!userId) {
-      alert("User not logged in!");
+      toast.error("Please login to create a post!");
       return;
     }
 
     if (!image) {
-      alert("Please upload an image!");
+      toast.error("Please upload an image!");
       return;
     }
 
@@ -31,12 +32,12 @@ const AddPost = () => {
     try {
       setIsSubmitting(true);
       await createPost(formData);
-      alert("Post created successfully!");
+      toast.success("Post created successfully!");
       setCaption("");
       setImage(null);
     } catch (error) {
       console.error("Failed to create post:", error);
-      alert("Failed to create post. Please try again!");
+      toast.error("Failed to create post. Please try again!");
     } finally {
       setIsSubmitting(false);
     }
@@ -44,6 +45,7 @@ const AddPost = () => {
 
   return (
     <div className="p-6 sm:p-8 md:p-12 flex items-center justify-center">
+      <ToastContainer/>
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="space-y-2">
