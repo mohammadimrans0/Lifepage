@@ -63,7 +63,7 @@ const AddPost = () => {
   };
 
   return (
-    <div className="p-6 flex items-center justify-center">
+    <div className="p-2 md:p-6 flex items-center justify-center">
       <ToastContainer />
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
         <form

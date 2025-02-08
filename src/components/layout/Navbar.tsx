@@ -1,17 +1,23 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { Search, Menu, ChevronDown, User, MessageSquareText, Settings, Bell } from "lucide-react"
-import Image from "next/image"
-import { useUserStore } from "@/stores/useUserStore"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  Search,
+  Menu,
+  ChevronDown,
+  MessageSquareText,
+  Bell,
+} from "lucide-react";
+import Image from "next/image";
+import { useUserStore } from "@/stores/useUserStore";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isProductsOpen, setIsProductsOpen] = useState(false)
-  const [isAccountsOpen, setIsAccountsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isAccountsOpen, setIsAccountsOpen] = useState(false);
 
-  const { userId, profile, fetchProfile} = useUserStore();
+  const { userId, profile, fetchProfile } = useUserStore();
 
   useEffect(() => {
     if (userId) {
@@ -20,18 +26,19 @@ const Navbar = () => {
   }, [userId, fetchProfile]);
 
   return (
-    <nav className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white px-6">
+      <div className="container mx-auto">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <div className="flex-shrink-0">
+            <div>
               <Link href="/">
-                <Image
+                {/* <Image
                 src="/images/lifepage-logo.png"
                 alt="logo"
                 width={120}
-                height={20}
-                />
+                height={16}
+                /> */}
+                <h1 className="text-3xl font-semibold">Lifepage</h1>
               </Link>
             </div>
             <div className="hidden md:block ml-6">
@@ -59,13 +66,22 @@ const Navbar = () => {
                 </button>
                 {isProductsOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                    <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
                       Page1
                     </Link>
-                    <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
                       Page2
                     </Link>
-                    <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
                       Page3
                     </Link>
                   </div>
@@ -81,14 +97,23 @@ const Navbar = () => {
                 </button>
                 {isAccountsOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                    <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
                       Account1
                     </Link>
-                    <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Account2
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Account2
                     </Link>
-                    <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Account3
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Account3
                     </Link>
                   </div>
                 )}
@@ -100,32 +125,31 @@ const Navbar = () => {
                 My Network
               </Link>
               <button className="bg-gray-200 text-white px-2 py-2 rounded-md text-sm ">
-                <MessageSquareText className="text-slate-800"/>
+                <MessageSquareText className="text-slate-800" />
               </button>
               <button className="bg-gray-200 text-white px-2 py-2 rounded-md text-sm ">
-                <Settings className="text-slate-800"/>
+                <Bell className="text-slate-800" />
               </button>
-              <button className="bg-gray-200 text-white px-2 py-2 rounded-md text-sm ">
-                <Bell className="text-slate-800"/>
-              </button>
-              <Link
-                href="/user/profile"
-              >
-                <div>
-              {profile?.image ? (
-                      <Image
-                        src={profile.image}
-                        alt="Profile"
-                        width={40}
-                        height={40}
-                        className="rounded-full border-2 border-blue-500 shadow-md object-cover"
-                      />
-                    ) : (
-                      <User size={36} className="text-gray-500" />
-                    )}
+
+              <div>
+                {profile?.image ? (
+                  <Link href="/user/profile">
+                    <Image
+                      src={profile.image}
+                      alt="Profile"
+                      width={40}
+                      height={40}
+                      className="rounded-full border-2 border-blue-500 shadow-md object-cover"
+                    />
+                  </Link>
+                ) : (
+                  <Link href="/auth/login">
+                    <button className="w-full text-left px-3 py-2 rounded-md text-base font-medium bg-blue-500 text-white hover:bg-blue-600">
+                      Sign In
+                    </button>
+                  </Link>
+                )}
               </div>
-              </Link>
-              
             </div>
           </div>
           <div className="md:hidden flex items-center">
@@ -143,10 +167,10 @@ const Navbar = () => {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              href="/about"
+              href="/user/profile"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
             >
-              About
+              Profile
             </Link>
             <button
               onClick={() => setIsProductsOpen(!isProductsOpen)}
@@ -186,25 +210,10 @@ const Navbar = () => {
               Sign In
             </button>
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-200">
-            <div className="px-2">
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                />
-                <button className="ml-2 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                  <Search size={20} />
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       )}
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
-
+export default Navbar;

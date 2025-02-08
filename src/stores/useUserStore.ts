@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import { permanentRedirect } from 'next/navigation'
+import { permanentRedirect } from 'next/navigation';
 import { toast } from 'react-toastify';
 
 type UserProfile = {
@@ -31,6 +31,8 @@ type UserStore = {
   fetchAllProfile: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  followUser: (data: { followerId: string; followingId: string }) => Promise<void>;
+  unfollowUser: (data: { followerId: string; followingId: string }) => Promise<void>;
 };
 
 export const useUserStore = create<UserStore>((set, get) => ({
@@ -38,22 +40,17 @@ export const useUserStore = create<UserStore>((set, get) => ({
   profile: null,
   allProfiles: [],
 
-  // Function to handle signup
   signup: async (data) => {
     try {
       await axios.post('https://lifepage-server.onrender.com/api/user/signup/', data);
       toast.success('Account created successfully! Redirecting to login.');
-
-      setTimeout(() => {
-        permanentRedirect('/auth/login');
-      }, 2000);
+      setTimeout(() => permanentRedirect('/auth/login'), 2000);
     } catch (error: any) {
       console.error('Signup error:', error.response?.data || error.message);
       toast.error(error.response?.data?.detail || 'Signup failed. Please try again.');
     }
   },
 
-  // Function to handle login
   login: async (data) => {
     try {
       const response = await axios.post('https://lifepage-server.onrender.com/api/user/login/', data);
@@ -62,21 +59,16 @@ export const useUserStore = create<UserStore>((set, get) => ({
       if (userId) {
         localStorage.setItem('user_id', userId);
         localStorage.setItem('token', token);
-
         toast.success('Login successful! Redirecting...');
-
-        setTimeout(() => {
-          permanentRedirect('/');
-        }, 2000);
+        setTimeout(() => permanentRedirect('/'), 2000);
       } else {
         throw new Error('User ID not found in the response.');
       }
-    } catch (error : any) {
+    } catch (error: any) {
       toast.error('Login error:', error.response?.data || error.message);
     }
   },
 
-  // Function to handle logout
   logout: async () => {
     try {
       await axios.post('https://lifepage-server.onrender.com/api/user/logout/');
@@ -84,60 +76,69 @@ export const useUserStore = create<UserStore>((set, get) => ({
       localStorage.removeItem('token');
       set({ userId: null, profile: null });
       toast.success('Logged out successfully.');
-
-      setTimeout(() => {
-        permanentRedirect('/auth/login');
-      }, 2000);
+      setTimeout(() => permanentRedirect('/auth/login'), 2000);
     } catch (error: any) {
       console.error('Logout error:', error.response?.data || error.message);
       toast.error(error.response?.data?.detail || `Logout failed. Status: ${error.response?.status}`);
     }
-  },  
+  },
 
-  // Function to fetch all profile
   fetchAllProfile: async () => {
     try {
-      const response = await axios.get(`https://lifepage-server.onrender.com/api/user/profiles/`);
+      const response = await axios.get('https://lifepage-server.onrender.com/api/user/profiles/');
       set({ allProfiles: response.data });
     } catch (error: any) {
       console.error('Error fetching all profiles:', error.response?.data || error.message);
     }
   },
 
-  // Function to fetch the user's profile
   fetchProfile: async () => {
-    const userId = get().userId; // Get the current user ID from the store
-    if (!userId) {
-      console.warn('User ID not found. Cannot fetch profile.');
-      return;
-    }
+    const userId = get().userId;
+    if (!userId) return;
 
     try {
       const response = await axios.get(`https://lifepage-server.onrender.com/api/user/profiles/${userId}`);
-      const profile = response.data;
-      set({ profile });
+      set({ profile: response.data });
     } catch (error: any) {
       console.error('Error fetching profile:', error.response?.data || error.message);
     }
   },
 
-  // Function to update the user's profile
   updateProfile: async (data) => {
     const userId = get().userId;
-    if (!userId) {
-      console.warn('User ID not found. Cannot update profile.');
-      return;
-    }
+    if (!userId) return;
 
     try {
       const response = await axios.put(`https://lifepage-server.onrender.com/api/user/profiles/${userId}/`, data);
-      const updatedProfile = response.data;
-      set({ profile: updatedProfile });
-      console.log('Profile updated successfully:', updatedProfile);
+      set({ profile: response.data });
       toast.success('Profile updated successfully.');
     } catch (error: any) {
       console.error('Error updating profile:', error.response?.data || error.message);
-      toast.error(error.response?.data?.detail || 'Failed to update profile. Please try again.');
+      toast.error(error.response?.data?.detail || 'Failed to update profile.');
     }
   },
+
+  followUser: async (data) => {
+    try {
+      await axios.post("https://lifepage-server.onrender.com/api/user/follow/", data);
+      toast.success("Followed successfully!");
+    } catch (error: any) {
+      console.error("Error following user:", error.response?.data || error.message);
+      // toast.error(error.response?.data?.detail || "Failed to follow user.");
+    }
+  },
+
+  unfollowUser: async (data) => {
+    try {
+      await axios.delete(
+        `https://lifepage-server.onrender.com/api/user/follow/?follower_id=${data.followerId}&following_id=${data.followingId}/`
+      );
+      toast.success("Unfollowed successfully!");
+    } catch (error: any) {
+      console.error("Error unfollowing user:", error.response?.data || error.message);
+      // toast.error(error.response?.data?.detail || "Failed to unfollow user.");
+    }
+  },
+
+
 }));

@@ -6,18 +6,22 @@ import Image from "next/image";
 import UserPost from "@/components/user/profile/UserPost";
 import BookMark from "@/components/user/profile/BookMark";
 import { Bookmark, FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const { userId, profile, fetchProfile, updateProfile } = useUserStore();
   const [editableField, setEditableField] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>({});
   const [activeTab, setActiveTab] = useState("posts");
+  const router = useRouter();
 
   useEffect(() => {
     if (userId) {
       fetchProfile();
+    }else{
+      setTimeout(() => router.push('/auth/login'), 2000);
     }
-  }, [userId, fetchProfile]);
+  }, [userId, fetchProfile, router]);
 
   // Handle input changes in editable fields
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,9 +81,9 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="px-16 py-8">
+      <div className="px-2 md:px-16 py-8">
         {/* Profile Header */}
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-4 md:space-x-8">
           <Image
             src={profile.image}
             alt="Profile"
@@ -89,7 +93,7 @@ const ProfilePage = () => {
           />
           <div className="flex flex-col">
             <h1 className="text-3xl font-semibold">{profile?.user.username}</h1>
-            <div className="flex space-x-6 mt-2">
+            <div className="flex flex-wrap space-x-6 mt-2">
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
                   {profile.followers_count}
@@ -121,7 +125,7 @@ const ProfilePage = () => {
               <button className="px-4 py-1 bg-blue-400 rounded-lg transition duration-200">
                 Follow
               </button>
-              <button className="px-4 py-1 bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-blue-500 transition duration-200">
+              <button className="px-4 py-1 bg-transparent rounded-lg hover:bg-white hover:text-blue-500 transition duration-200">
                 Message
               </button>
             </div>

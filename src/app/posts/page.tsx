@@ -12,7 +12,7 @@ const PostsPage: React.FC = () => {
   }, [fetchPosts]);
 
   return (
-    <div className="max-w-4xl px-6  py-4">
+    <div className="px-2 md:px-6 py-1">
       {posts.length > 0 ? (
         posts.map((post) => <PostCard key={post.id} post={post} />)
       ) : (

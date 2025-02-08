@@ -18,31 +18,41 @@ export default function LeftSidebar() {
     <div className="py-6">
       <div className="mb-8 bg-white px-8 py-4 rounded-md border">
         {/* Profile Section */}
-        <div className="flex flex-col items-center justify-center gap-y-2">
-          <Image
-            src={profile?.image || "/images/default-profile.png"}
-            alt="profile image"
-            width={64}
-            height={36}
-          />
-          <h1 className="text-2xl font-semibold">{profile?.name}</h1>
-          <p>{profile?.bio}</p>
+        {profile ? (
+          <div className="flex flex-col items-center justify-center gap-y-2">
+            <Image
+              src={profile.image}
+              alt="profile image"
+              width={64}
+              height={36}
+            />
+            <h1 className="text-2xl font-semibold">{profile.name}</h1>
+            <p>{profile.bio}</p>
 
-          <div className="flex items-center justify-center gap-x-6">
-            <div className="flex flex-col items-center">
-              <span className="font-semibold">{profile?.followers_count}</span>{" "}
-              Posts
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-semibold">{profile?.followers_count}</span>{" "}
-              Followers
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-semibold">{profile?.following_count}</span>{" "}
-              Following
+            <div className="flex items-center justify-center gap-x-6">
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">
+                  {profile.followers_count}
+                </span>{" "}
+                Posts
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">
+                  {profile.followers_count}
+                </span>{" "}
+                Followers
+              </div>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">
+                  {profile.following_count}
+                </span>{" "}
+                Following
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
 
         <hr className="my-4" />
 
@@ -102,7 +112,7 @@ export default function LeftSidebar() {
               Groups
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Image
               src="/images/image-icon/notification.svg"
               alt="feed"
@@ -112,7 +122,7 @@ export default function LeftSidebar() {
             <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
               Notifications
             </p>
-          </div>
+          </div> */}
           <div className="flex items-center gap-2">
             <Image
               src="/images/image-icon/settings.svg"

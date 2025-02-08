@@ -1,86 +1,72 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Post } from "@/stores/usePostStore";
 import { usePostStore } from "@/stores/usePostStore";
-import { Heart, MessageCircle, Bookmark } from "lucide-react";
+import { useUserStore } from "@/stores/useUserStore";
+import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface PostCardProps {
   post: Post;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const router = useRouter();
   const {
     userId,
     likes,
+    comments,
     likePost,
-    deleteLike,
+    unLike,
     fetchLikes,
     addComment,
+    fetchComments,
     addBookmark,
     removeBookmark,
   } = usePostStore();
 
+  const { followUser, unfollowUser } = useUserStore();
+
   const [comment, setComment] = useState<string>("");
   const [showCommentInput, setShowCommentInput] = useState<boolean>(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
-  // Create separate states for each post's like and bookmark status
-  const [postStates, setPostStates] = useState<{ [key: string]: { liked: boolean, bookmarked: boolean } }>({});
-
-  // Fetch likes and bookmarks state asynchronously from the store
-  useEffect(() => {
-    const fetchPostData = async () => {
-      if (userId) {
-        const likedStatus = likes.some(
-          (like) => like.post === post.id && like.user === userId
-        );
-        const bookmarkedStatus = false; // You can implement the logic for bookmarks based on your data
-
-        // Set the states for this particular post
-        setPostStates((prevState) => ({
-          ...prevState,
-          [post.id]: {
-            liked: likedStatus,
-            bookmarked: bookmarkedStatus,
-          },
-        }));
-      }
-    };
-
-    fetchPostData();
-    fetchLikes(post.id);
-  }, [post, userId, fetchLikes, likes]);
+  const [postStates, setPostStates] = useState<{
+    [key: string]: { liked: boolean; bookmarked: boolean };
+  }>({});
 
   const handleLikeToggle = async () => {
-    if (postStates[post.id]?.liked) {
-      // If post is already liked, delete like
+    fetchLikes(post.id);
+    const isLiked = likes.some((like) => like.post === post.id);
+
+    if (isLiked) {
       if (userId) {
-        deleteLike(userId, post.id);
+        unLike(userId, post.id);
       }
     } else {
       likePost({ post: post.id, user: userId });
     }
 
-    // Update the like status for this post
-    setPostStates((prevState) => ({
-      ...prevState,
-      [post.id]: {
-        ...prevState[post.id],
-        liked: !prevState[post.id]?.liked,
-      },
-    }));
+    setPostStates((prevState) => {
+      const newLikedStatus = !isLiked;
+      return {
+        ...prevState,
+        [post.id]: {
+          ...prevState[post.id],
+          liked: newLikedStatus,
+        },
+      };
+    });
   };
 
   const handleBookmark = async () => {
     if (postStates[post.id]?.bookmarked) {
-      // If post is already bookmarked, remove bookmark
       removeBookmark(post.id);
     } else {
       addBookmark({ post: post.id, user: userId });
     }
-
-    // Update the bookmark status for this post
     setPostStates((prevState) => ({
       ...prevState,
       [post.id]: {
@@ -90,6 +76,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     }));
   };
 
+  const handleShowComment = async (postId : string) => {
+    await fetchComments(postId);
+    setShowCommentInput(!showCommentInput)
+  };
+
   const handleAddComment = () => {
     if (comment.trim()) {
       addComment({ comment, post: post.id, user: userId });
@@ -97,95 +88,166 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     }
   };
 
+  const handleFollowToggle = () => {
+    const followerId = userId;
+    const followingId = post.userDetails.user.id;
+
+    if(!followerId) {
+      setTimeout(() => router.push('/auth/login'), 2000);
+      return;
+    }else{
+      if (isFollowing) {
+        unfollowUser({ followerId, followingId });
+      } else {
+        followUser({ followerId, followingId });
+      }
+      setIsFollowing(!isFollowing);
+    }
+    
+  };
+
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-4 mb-4 border border-gray-200 w-[450px]">
+    <div className="bg-white shadow-lg rounded-2xl p-4 mb-4 border border-gray-200 ">
       <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center gap-4">
-        <Image
-          src={post.userDetails.image}
-          alt="User"
-          width={48}
-          height={48}
-          className="rounded-full"
-          priority={true}
-        />
+        <div className="flex items-center gap-4">
+          <Image
+            src={post.userDetails.image}
+            alt="User"
+            width={48}
+            height={48}
+            className="rounded-full"
+            priority={true}
+          />
+          <div>
+            <p className="font-semibold">{post.userDetails.user.username}</p>
+            <p className="text-sm text-gray-500">
+              {new Date(post.created_at).toLocaleString()}
+            </p>
+          </div>
+        </div>
+
         <div>
-          <p className="font-semibold">{post.userDetails.user.username}</p>
-          <p className="text-sm text-gray-500">
-            {new Date(post.created_at).toLocaleString()}
-          </p>
+          <button
+            onClick={handleFollowToggle}
+            className={`px-6 py-1 mr-2 md:mr-3 border rounded-lg text-white ${
+              isFollowing ? "bg-gray-500" : "bg-blue-500"
+            }`}
+          >
+            {isFollowing ? "Unfollow" : "Follow"}
+          </button>
         </div>
       </div>
 
-      <div>
-        <button className="px-6 py-1 border rounded-lg text-white bg-blue-500">Follow</button>
-      </div>
-
-      </div>
-
-      <div className="rounded-lg overflow-hidden mb-4">
+      <div className="mb-4 px-2 md:pl-16">
         <Image
           src={post.image}
           alt="Post"
-          width={450}
-          height={450}
-          className="object-cover max-h-96"
+          width={480}
+          height={0}
+          className="object-cover max-h-[400px] rounded-lg"
         />
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 px-2 md:pl-16">
         <p className="text-sm text-gray-800">{post.caption}</p>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-center md:justify-between gap-x-5 md:gap-0 md:pl-11">
         <button
           onClick={handleLikeToggle}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+          className="flex items-center gap-2  md:px-4 py-2 rounded-lg text-sm font-medium"
         >
           <Heart
             size={20}
             fill={postStates[post.id]?.liked ? "red" : "none"}
             color={postStates[post.id]?.liked ? "red" : "currentColor"}
           />
-          <span>{post.no_of_likes} Likes</span>
+          <div className="flex items-center gap-1">
+            <span>{post.no_of_likes}</span>
+            <span className="">Likes</span>
+          </div>
+          
         </button>
 
         <button
-          onClick={() => setShowCommentInput(!showCommentInput)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+          onClick={() => handleShowComment(post.id)}
+          className="flex items-center gap-2 md:px-4 py-2 rounded-lg text-sm font-medium"
         >
           <MessageCircle size={20} />
-          <span>{post.no_of_comments} Comments</span>
+          <div className="flex items-center gap-1">
+          <span>{post.no_of_comments}</span>
+            <span className="">Comments</span>
+          </div>
+          
+        </button>
+
+        <button className="flex items-center gap-2 md:px-4 py-2 rounded-lg text-sm font-medium">
+          <Share2 size={20} />
+          <div className="flex items-center gap-1">
+          <span>{0}</span>
+            <span className="">Share</span>
+          </div>
+          
         </button>
 
         <button
           onClick={handleBookmark}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+          className="flex items-center gap-2 md:px-4 py-2 rounded-lg text-sm font-medium"
         >
           <Bookmark
             size={20}
             fill={postStates[post.id]?.bookmarked ? "black" : "none"}
-            color={postStates[post.id]?.bookmarked ? "currentColor" : "currentColor"}
           />
-          <span>{postStates[post.id]?.bookmarked ? "Bookmarked" : "Bookmark"}</span>
+          <span className="hidden md:block">
+            {postStates[post.id]?.bookmarked ? "Bookmarked" : "Bookmark"}
+          </span>
         </button>
       </div>
 
       {showCommentInput && (
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Add a comment..."
-            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          <button
-            onClick={handleAddComment}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          >
-            Post
-          </button>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Add a comment..."
+              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+            />
+            <button
+              onClick={handleAddComment}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Post
+            </button>
+          </div>
+
+          <div className="mt-4">
+            <h3 className="font-semibold text-sm mb-2">Comments</h3>
+            <div className="space-y-3">
+              {comments.map((commentData) => (
+                <div key={commentData.id} className="flex items-center gap-2 border p-2 rounded-lg">
+                  {/* <Image
+                    src={commentData.user.image}
+                    alt="User"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  /> */}
+                  <div>
+                    {/* <p className="font-semibold">{commentData.user.username}</p> */}
+                    <p className="text-sm ">
+                      {commentData.comment}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(commentData.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
       )}
     </div>

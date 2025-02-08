@@ -8,7 +8,7 @@ export default function Home() {
     <div className="m-auto lg:container">
     <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12">
 
-      <div className="col-span-4 lg:col-span-3">
+      <div className="hidden md:block col-span-4 lg:col-span-3">
         <LeftSidebar />
       </div>
 
@@ -19,7 +19,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="col-span-4 lg:col-span-3">
+      <div className="hidden md:block col-span-4 lg:col-span-3">
         <RightSidebar />
       </div>
 

@@ -51,7 +51,7 @@ interface PostStore {
   deletePost: (id: string) => Promise<void>;
   likePost: (data: { post: string; user: string | null }) => Promise<void>;
   fetchLikes: (postId: string) => Promise<void>;
-  deleteLike: (userId: string, postId: string) => Promise<void>;
+  unLike: (userId: string, postId: string) => Promise<void>;
   addComment: (data: {
     comment: string;
     post: string;
@@ -76,7 +76,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   userPosts: [],
   comments: [],
   bookmarks: [],
-  likes: [], // Initialize likes array
+  likes: [],
 
   // Fetch all posts
   fetchPosts: async () => {
@@ -90,14 +90,14 @@ export const usePostStore = create<PostStore>((set, get) => ({
             const userResponse = await axios.get(
               `https://lifepage-server.onrender.com/api/user/profiles/${post.user}/`
             );
-            const likeResponse = await axios.get(
-              `${BASE_URL}likeposts/?post=${post.id}`
-            ); // Fetch likes for the post
+            await axios.get(
+              `${BASE_URL}likepost/?post=${post.id}`
+            );
 
             return {
               ...post,
               userDetails: userResponse.data,
-              likes: likeResponse.data.map((like: any) => like.user), // Map users who liked the post
+              // likes: likeResponse.data.map((like: any) => like.user), // Map users who liked the post
             };
           } catch (error) {
             console.error(
@@ -165,9 +165,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Like a post
   likePost: async (data) => {
     try {
-      const response = await axios.post(`${BASE_URL}likeposts/`, data);
-      const currentLikes = get().likes;
-      set({ likes: [...currentLikes, response.data] });
+      await axios.post(`${BASE_URL}likepost/`, data);
     } catch (error: any) {
       console.error(
         "Failed to create like:",
@@ -179,7 +177,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Fetch likes for a post
   fetchLikes: async (postId) => {
     try {
-      const response = await axios.get(`${BASE_URL}likeposts/?post=${postId}`);
+      const response = await axios.get(`${BASE_URL}likepost/?post=${postId}`);
       set({ likes: response.data as Like[] });
     } catch (error) {
       console.error("Failed to fetch likes:", error);
@@ -187,34 +185,29 @@ export const usePostStore = create<PostStore>((set, get) => ({
   },
 
   // Delete a like
-  deleteLike: async (userId, postId) => {
-    console.log("delete like clicked");
+  unLike: async (userId, postId) => {
+    console.log("unlike clicked");
     try {
-      const likeToDelete = get().likes.find(
-        (like) => like.user === userId && like.post === postId
+      const response = await axios.delete(
+        `https://lifepage-server.onrender.com/api/post/likepost/?user_id=${userId}&post_id=${postId}`
       );
-      if (!likeToDelete) {
-        console.log("No like found for this user on this post.");
-        return;
+  
+      if (response.status === 204) {
+        console.log("Like removed successfully.");
+        await get().fetchPosts(); // Refresh the UI after like removal
+      } else {
+        console.log("Failed to remove like.");
       }
-      await axios.delete(`${BASE_URL}likeposts/${likeToDelete.id}/`);
-      const currentLikes = get().likes;
-      set({
-        likes: currentLikes.filter((like) => like.id !== likeToDelete.id),
-      });
-      await get().fetchPosts(); // Refresh UI
     } catch (error: any) {
-      console.error(
-        "Failed to delete like:",
-        error.response?.data || error.message
-      );
+      console.error("Failed to un-like the post:", error.response?.data || error.message);
     }
   },
+  
 
   // Add a comment to a post
   addComment: async (data) => {
     try {
-      await axios.post(`${BASE_URL}commentposts/`, data);
+      await axios.post(`${BASE_URL}commentpost/`, data);
       await get().fetchComments(data.post);
     } catch (error) {
       console.error("Failed to add comment:", error);
@@ -225,7 +218,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   fetchComments: async (postId) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}commentposts/?post=${postId}`
+        `${BASE_URL}commentpost/?post=${postId}`
       );
       set({ comments: response.data });
     } catch (error) {
@@ -236,7 +229,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Update a comment
   updateComment: async (id, data) => {
     try {
-      await axios.put(`${BASE_URL}commentposts/${id}/`, data);
+      await axios.put(`${BASE_URL}commentpost/${id}/`, data);
       const currentComments = get().comments;
       set({
         comments: currentComments.map((comment) =>
@@ -251,7 +244,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Delete a comment
   deleteComment: async (id) => {
     try {
-      await axios.delete(`${BASE_URL}commentposts/${id}/`);
+      await axios.delete(`${BASE_URL}commentpost/${id}/`);
       const currentComments = get().comments;
       set({ comments: currentComments.filter((comment) => comment.id !== id) });
     } catch (error) {
