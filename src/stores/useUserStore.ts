@@ -36,7 +36,7 @@ type UserStore = {
 };
 
 export const useUserStore = create<UserStore>((set, get) => ({
-  userId: typeof window !== 'undefined' ? localStorage.getItem('user_id') || null : null,
+  userId: typeof window !== 'undefined' ? localStorage.getItem('lifepage_user_id') || null : null,
   profile: null,
   allProfiles: [],
 
@@ -57,8 +57,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
       const userId = response.data?.user_id;
       const token = response.data?.token;
       if (userId) {
-        localStorage.setItem('user_id', userId);
-        localStorage.setItem('token', token);
+        localStorage.setItem('lifepage_user_id', userId);
+        localStorage.setItem('lifepage_auth_token', token);
         toast.success('Login successful! Redirecting...');
         setTimeout(() => permanentRedirect('/'), 2000);
       } else {
@@ -72,8 +72,8 @@ export const useUserStore = create<UserStore>((set, get) => ({
   logout: async () => {
     try {
       await axios.post('https://lifepage-server.onrender.com/api/user/logout/');
-      localStorage.removeItem('user_id');
-      localStorage.removeItem('token');
+      localStorage.removeItem('lifepage_user_id');
+      localStorage.removeItem('lifepage_auth_token');
       set({ userId: null, profile: null });
       toast.success('Logged out successfully.');
       setTimeout(() => permanentRedirect('/auth/login'), 2000);
