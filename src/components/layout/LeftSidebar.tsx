@@ -16,7 +16,7 @@ export default function LeftSidebar() {
 
   return (
     <div className="py-6">
-      <div className="mb-8 bg-white px-8 py-4 rounded-md border">
+      <div className="mb-8 bg-white px-8 py-4 rounded-lg border drop-shadow-md">
         {/* Profile Section */}
         {profile ? (
           <div className="flex flex-col items-center justify-center gap-y-2">

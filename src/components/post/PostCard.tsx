@@ -76,9 +76,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     }));
   };
 
-  const handleShowComment = async (postId : string) => {
+  const handleShowComment = async (postId: string) => {
     await fetchComments(postId);
-    setShowCommentInput(!showCommentInput)
+    setShowCommentInput(!showCommentInput);
   };
 
   const handleAddComment = () => {
@@ -92,10 +92,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     const followerId = userId;
     const followingId = post.userDetails.user.id;
 
-    if(!followerId) {
-      setTimeout(() => router.push('/auth/login'), 2000);
+    if (!followerId) {
+      setTimeout(() => router.push("/auth/login"), 2000);
       return;
-    }else{
+    } else {
       if (isFollowing) {
         unfollowUser({ followerId, followingId });
       } else {
@@ -103,11 +103,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       }
       setIsFollowing(!isFollowing);
     }
-    
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-4 mb-4 border border-gray-200 ">
+    <div className="bg-white drop-shadow-md rounded-lg p-4 mb-4 border border-gray-200 ">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <Image
@@ -115,7 +114,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             alt="User"
             width={48}
             height={48}
-            className="rounded-full"
+            className="rounded-full ml-1"
             priority={true}
           />
           <div>
@@ -129,7 +128,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <div>
           <button
             onClick={handleFollowToggle}
-            className={`px-6 py-1 mr-2 md:mr-3 border rounded-lg text-white ${
+            className={`px-6 py-1 mr-2 border rounded-lg text-white ${
               isFollowing ? "bg-gray-500" : "bg-blue-500"
             }`}
           >
@@ -138,24 +137,24 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </div>
       </div>
 
-      <div className="mb-4 px-2 md:pl-16">
+      <div className="mb-4 px-2 ">
         <Image
           src={post.image}
           alt="Post"
-          width={480}
+          width={540}
           height={0}
-          className="object-cover max-h-[400px] rounded-lg"
+          className="object-cover max-h-[500px] rounded-lg"
         />
       </div>
 
-      <div className="mb-4 px-2 md:pl-16">
+      <div className="mb-4 px-2 ">
         <p className="text-sm text-gray-800">{post.caption}</p>
       </div>
 
-      <div className="flex items-center justify-center md:justify-between gap-x-5 md:gap-0 md:pl-11">
+      <div className="flex items-center justify-center md:justify-between gap-x-5">
         <button
           onClick={handleLikeToggle}
-          className="flex items-center gap-2  md:px-4 py-2 rounded-lg text-sm font-medium"
+          className="flex items-center gap-2 md:px-2 py-2 rounded-lg text-sm font-medium"
         >
           <Heart
             size={20}
@@ -166,7 +165,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <span>{post.no_of_likes}</span>
             <span className="">Likes</span>
           </div>
-          
         </button>
 
         <button
@@ -175,19 +173,17 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         >
           <MessageCircle size={20} />
           <div className="flex items-center gap-1">
-          <span>{post.no_of_comments}</span>
+            <span>{post.no_of_comments}</span>
             <span className="">Comments</span>
           </div>
-          
         </button>
 
         <button className="flex items-center gap-2 md:px-4 py-2 rounded-lg text-sm font-medium">
           <Share2 size={20} />
           <div className="flex items-center gap-1">
-          <span>{0}</span>
+            <span>{0}</span>
             <span className="">Share</span>
           </div>
-          
         </button>
 
         <button
@@ -226,7 +222,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <h3 className="font-semibold text-sm mb-2">Comments</h3>
             <div className="space-y-3">
               {comments.map((commentData) => (
-                <div key={commentData.id} className="flex items-center gap-2 border p-2 rounded-lg">
+                <div
+                  key={commentData.id}
+                  className="flex items-center gap-2 border p-2 rounded-lg"
+                >
                   {/* <Image
                     src={commentData.user.image}
                     alt="User"
@@ -236,9 +235,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   /> */}
                   <div>
                     {/* <p className="font-semibold">{commentData.user.username}</p> */}
-                    <p className="text-sm ">
-                      {commentData.comment}
-                    </p>
+                    <p className="text-sm ">{commentData.comment}</p>
                     <p className="text-xs text-gray-500">
                       {new Date(commentData.created_at).toLocaleString()}
                     </p>
@@ -247,7 +244,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               ))}
             </div>
           </div>
-
         </div>
       )}
     </div>

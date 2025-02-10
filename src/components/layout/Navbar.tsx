@@ -26,7 +26,7 @@ const Navbar = () => {
   }, [userId, fetchProfile]);
 
   return (
-    <nav className="bg-white px-6">
+    <nav className="bg-white px-6 drop-shadow-md">
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -155,7 +155,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-blue-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-blue-500 focus:ring-1 focus:ring-inset focus:ring-blue-500"
             >
               <span className="sr-only">Open main menu</span>
               <Menu size={24} />
