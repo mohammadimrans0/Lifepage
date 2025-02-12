@@ -112,17 +112,6 @@ export default function LeftSidebar() {
               Groups
             </p>
           </div>
-          {/* <div className="flex items-center gap-2">
-            <Image
-              src="/images/image-icon/notification.svg"
-              alt="feed"
-              width={24}
-              height={16}
-            />
-            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
-              Notifications
-            </p>
-          </div> */}
           <div className="flex items-center gap-2">
             <Image
               src="/images/image-icon/settings.svg"

@@ -223,24 +223,30 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <div className="space-y-3">
               {comments.map((commentData) => (
                 <div
-                  key={commentData.id}
-                  className="flex items-center gap-2 border p-2 rounded-lg"
-                >
+                key={commentData.id}
+                className="flex justify-between gap-2 border p-2 rounded-lg"
+              >
+                <div className="flex gap-2 items-center w-full">
                   {/* <Image
-                    src={commentData.user.image}
+                    src={profile?.image}
                     alt="User"
                     width={32}
                     height={32}
                     className="rounded-full"
                   /> */}
-                  <div>
-                    {/* <p className="font-semibold">{commentData.user.username}</p> */}
-                    <p className="text-sm ">{commentData.comment}</p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(commentData.created_at).toLocaleString()}
-                    </p>
+                  <div className="flex flex-col">
+                    <p className="font-semibold">rahims0</p>
+                    <p>{commentData.comment}</p>
                   </div>
                 </div>
+              
+                <div className="flex flex-col items-end">
+                  <p className="text-xs text-gray-500">
+                    {new Date(commentData.created_at).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+              
               ))}
             </div>
           </div>

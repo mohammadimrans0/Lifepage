@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export interface Post {
   bookmarks: any;
@@ -70,7 +71,7 @@ const BASE_URL = "https://lifepage-server.onrender.com/api/post/";
 export const usePostStore = create<PostStore>((set, get) => ({
   userId:
     typeof window !== "undefined"
-      ? localStorage.getItem("user_id") || null
+      ? localStorage.getItem("lifepage_user_id") || null
       : null,
   posts: [],
   userPosts: [],
@@ -137,7 +138,8 @@ export const usePostStore = create<PostStore>((set, get) => ({
         headers: { "Content-Type": "multipart/form-data" },
       });
       await get().fetchPosts();
-    } catch (error) {
+    } catch (error : any) {
+      toast.error("Failed to create post:", error);
       console.error("Failed to create post:", error);
     }
   },
