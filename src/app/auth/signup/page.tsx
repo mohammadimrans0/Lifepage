@@ -43,7 +43,7 @@ const SignupPage: React.FC = () => {
         <ToastContainer />
         <div className="">
           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-x-6 gap-y-4">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Create an account</h1>
               </div>
@@ -145,8 +145,8 @@ const SignupPage: React.FC = () => {
           <Image
             src="/images/login-image.png"
             alt="login-image"
-            width={420}
-            height={420}
+            width={400}
+            height={400}
             className="rounded-lg object-contain"
           />
         </div>

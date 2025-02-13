@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Search,
   Menu,
-  ChevronDown,
   MessageSquareText,
   Bell,
 } from "lucide-react";
@@ -15,7 +14,6 @@ import { useUserStore } from "@/stores/useUserStore";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
-  const [isAccountsOpen, setIsAccountsOpen] = useState(false);
 
   const { userId, profile, fetchProfile } = useUserStore();
 
@@ -56,68 +54,6 @@ const Navbar = () => {
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center space-x-4">
-              <div className="relative">
-                <button
-                  onClick={() => setIsProductsOpen(!isProductsOpen)}
-                  className="px-3 py-2 rounded-md font-medium text-gray-700 hover:text-blue-600 flex items-center"
-                >
-                  Pages
-                  <ChevronDown size={16} className="ml-1" />
-                </button>
-                {isProductsOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                    <Link
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Page1
-                    </Link>
-                    <Link
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Page2
-                    </Link>
-                    <Link
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Page3
-                    </Link>
-                  </div>
-                )}
-              </div>
-              <div className="relative">
-                <button
-                  onClick={() => setIsAccountsOpen(!isAccountsOpen)}
-                  className="px-3 py-2 rounded-md font-medium text-gray-700 hover:text-blue-600 flex items-center"
-                >
-                  Accounts
-                  <ChevronDown size={16} className="ml-1" />
-                </button>
-                {isAccountsOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                    <Link
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Account1
-                    </Link>
-                    <Link
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Account2
-                    </Link>
-                    <Link
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Account3
-                    </Link>
-                  </div>
-                )}
-              </div>
               <Link
                 href="/"
                 className="px-3 py-2 rounded-md font-medium text-gray-700 hover:text-blue-600"

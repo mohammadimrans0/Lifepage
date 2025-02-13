@@ -90,7 +90,7 @@ export default function LeftSidebar() {
               Latest News
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Image
               src="/images/image-icon/events.svg"
               alt="feed"
@@ -111,7 +111,7 @@ export default function LeftSidebar() {
             <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
               Groups
             </p>
-          </div>
+          </div> */}
           <div className="flex items-center gap-2">
             <Image
               src="/images/image-icon/settings.svg"
