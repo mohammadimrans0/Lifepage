@@ -106,7 +106,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   return (
-    <div className="bg-white drop-shadow-md rounded-lg p-4 mb-4 border border-gray-200 ">
+    <div className="bg-white drop-shadow-md rounded-lg p-4 mb-4 border border-gray-200 max-w-[600px] w-full mx-auto">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <Image
@@ -128,7 +128,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <div>
           <button
             onClick={handleFollowToggle}
-            className={`px-6 py-1 mr-2 border rounded-lg text-white ${
+            className={`px-3 md:px-6 py-1 mr-2 border rounded-lg text-white ${
               isFollowing ? "bg-gray-500" : "bg-blue-500"
             }`}
           >
@@ -143,7 +143,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           alt="Post"
           width={540}
           height={0}
-          className="object-cover max-h-[500px] rounded-lg"
+          className="w-full h-auto object-cover max-h-[500px] rounded-lg"
         />
       </div>
 
@@ -151,7 +151,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <p className="text-sm text-gray-800">{post.caption}</p>
       </div>
 
-      <div className="flex items-center justify-center md:justify-between gap-x-5">
+      <div className="flex items-center justify-center md:justify-start gap-x-5 flex-wrap">
         <button
           onClick={handleLikeToggle}
           className="flex items-center gap-2 md:px-2 py-2 rounded-lg text-sm font-medium"
@@ -182,17 +182,18 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <Share2 size={20} />
           <div className="flex items-center gap-1">
             <span>{0}</span>
-            <span className="">Share</span>
+            <span className="hidden md:block">Share</span>
           </div>
         </button>
 
         <button
           onClick={handleBookmark}
-          className="flex items-center gap-2 md:px-4 py-2 rounded-lg text-sm font-medium"
+          className="flex items-center gap-2 md:px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap"
         >
           <Bookmark
             size={20}
             fill={postStates[post.id]?.bookmarked ? "black" : "none"}
+            className="shrink-0"
           />
           <span className="hidden md:block">
             {postStates[post.id]?.bookmarked ? "Bookmarked" : "Bookmark"}
@@ -222,31 +223,28 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
             <h3 className="font-semibold text-sm mb-2">Comments</h3>
             <div className="space-y-3">
               {comments.map((commentData) => (
-                <div
-                key={commentData.id}
-                className="flex justify-between gap-2 border p-2 rounded-lg"
-              >
-                <div className="flex gap-2 items-center w-full">
-                  {/* <Image
-                    src={profile?.image}
-                    alt="User"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  /> */}
-                  <div className="flex flex-col">
-                    <p className="font-semibold">rahims0</p>
-                    <p>{commentData.comment}</p>
+                <div key={commentData.id} className=" border p-2 rounded-lg">
+                  <div>
+                    <div className="flex gap-2 items-center w-full mb-2">
+                      <Image
+                        src={commentData.user.image}
+                        alt="User"
+                        width={48}
+                        height={48}
+                        className="rounded-full"
+                      />
+
+                      <div>
+                        <p className="font-semibold">{commentData.user.name}</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(commentData.created_at).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
                   </div>
+
+                  <p>{commentData.comment}</p>
                 </div>
-              
-                <div className="flex flex-col items-end">
-                  <p className="text-xs text-gray-500">
-                    {new Date(commentData.created_at).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-              
               ))}
             </div>
           </div>

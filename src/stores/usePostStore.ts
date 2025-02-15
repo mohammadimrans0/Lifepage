@@ -24,7 +24,10 @@ export interface Like {
 interface Comment {
   id: string;
   post: string;
-  user: string;
+  user: {
+    name: string;
+    image: string;
+  };
   comment: string;
   created_at: string;
 }
@@ -67,6 +70,7 @@ interface PostStore {
 }
 
 const BASE_URL = "https://lifepage-server.onrender.com/api/post/";
+const USER_URL = "https://lifepage-server.onrender.com/api/user";
 
 export const usePostStore = create<PostStore>((set, get) => ({
   userId:
@@ -219,10 +223,33 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Fetch comments for a specific post
   fetchComments: async (postId) => {
     try {
+      const userId = get().userId;
+      if (!userId) throw new Error('User ID not found');
+      
       const response = await axios.get(
         `${BASE_URL}commentpost/?post=${postId}`
       );
-      set({ comments: response.data });
+  
+      const commentsData = response.data;
+
+      // Fetching the full user data (username, userImage, etc.)
+    const userResponse = await axios.get(`${USER_URL}/profiles/${userId}`);
+    const userData = userResponse.data;
+
+    console.log(userData)
+  
+      // Pass user data along with each comment
+      const commentsWithUserData = commentsData.map((comment : Comment) => ({
+        ...comment,
+        user: {
+          // userId: userData.id,
+          name: userData.name,
+          image: userData.image, // Assuming the image field is named `profileImage`
+          // Add any other user details you need
+        },
+      }));
+  
+      set({ comments: commentsWithUserData });
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     }
