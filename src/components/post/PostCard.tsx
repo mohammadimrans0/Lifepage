@@ -106,7 +106,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   return (
-    <div className="bg-white drop-shadow-md rounded-lg p-4 mb-4 border border-gray-200 max-w-[600px] w-full mx-auto">
+    <div className="bg-white drop-shadow-md rounded-lg p-4 mb-4 border border-gray-200 w-full max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <Image

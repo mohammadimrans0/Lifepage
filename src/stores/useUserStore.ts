@@ -3,6 +3,9 @@ import axios from 'axios';
 import { permanentRedirect } from 'next/navigation';
 import { toast } from 'react-toastify';
 
+// Define the base URL
+const BASE_URL = 'https://lifepage-server.vercel.app/api';
+
 type UserProfile = {
   user: any;
   id: number;
@@ -42,7 +45,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   signup: async (data) => {
     try {
-      await axios.post('https://lifepage-server.onrender.com/api/user/signup/', data);
+      await axios.post(`${BASE_URL}/user/signup/`, data);
       toast.success('Account created successfully! Redirecting to login.');
       setTimeout(() => permanentRedirect('/auth/login'), 2000);
     } catch (error: any) {
@@ -53,7 +56,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   login: async (data) => {
     try {
-      const response = await axios.post('https://lifepage-server.onrender.com/api/user/login/', data);
+      const response = await axios.post(`${BASE_URL}/user/login/`, data);
       const userId = response.data?.user_id;
       const token = response.data?.token;
       if (userId) {
@@ -71,7 +74,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   logout: async () => {
     try {
-      await axios.post('https://lifepage-server.onrender.com/api/user/logout/');
+      await axios.post(`${BASE_URL}/user/logout/`);
       localStorage.removeItem('lifepage_user_id');
       localStorage.removeItem('lifepage_auth_token');
       set({ userId: null, profile: null });
@@ -85,7 +88,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   fetchAllProfile: async () => {
     try {
-      const response = await axios.get('https://lifepage-server.onrender.com/api/user/profiles/');
+      const response = await axios.get(`${BASE_URL}/user/profiles/`);
       set({ allProfiles: response.data });
     } catch (error: any) {
       console.error('Error fetching all profiles:', error.response?.data || error.message);
@@ -97,7 +100,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
     if (!userId) return;
 
     try {
-      const response = await axios.get(`https://lifepage-server.onrender.com/api/user/profiles/${userId}`);
+      const response = await axios.get(`${BASE_URL}/user/profiles/${userId}`);
       set({ profile: response.data });
     } catch (error: any) {
       console.error('Error fetching profile:', error.response?.data || error.message);
@@ -109,7 +112,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
     if (!userId) return;
 
     try {
-      const response = await axios.put(`https://lifepage-server.onrender.com/api/user/profiles/${userId}/`, data);
+      const response = await axios.put(`${BASE_URL}/user/profiles/${userId}/`, data);
       set({ profile: response.data });
       toast.success('Profile updated successfully.');
     } catch (error: any) {
@@ -120,7 +123,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
 
   followUser: async (data) => {
     try {
-      await axios.post("https://lifepage-server.onrender.com/api/user/follow/", data);
+      await axios.post(`${BASE_URL}/user/follow/`, data);
       toast.success("Followed successfully!");
     } catch (error: any) {
       console.error("Error following user:", error.response?.data || error.message);
@@ -131,7 +134,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
   unfollowUser: async (data) => {
     try {
       await axios.delete(
-        `https://lifepage-server.onrender.com/api/user/follow/?follower_id=${data.followerId}&following_id=${data.followingId}/`
+        `${BASE_URL}/user/follow/?follower_id=${data.followerId}&following_id=${data.followingId}/`
       );
       toast.success("Unfollowed successfully!");
     } catch (error: any) {
@@ -139,6 +142,4 @@ export const useUserStore = create<UserStore>((set, get) => ({
       // toast.error(error.response?.data?.detail || "Failed to unfollow user.");
     }
   },
-
-
 }));

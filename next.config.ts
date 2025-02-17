@@ -4,9 +4,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'lifepage-server.onrender.com', // Specify the hostname
-        pathname: '/**', // Allow all paths (or specify a specific path pattern)
+        protocol: 'http',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
       },
     ],
   },

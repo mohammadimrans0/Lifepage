@@ -69,8 +69,10 @@ interface PostStore {
   removeBookmark: (bookmarkId: string) => Promise<void>;
 }
 
-const BASE_URL = "https://lifepage-server.onrender.com/api/post/";
-const USER_URL = "https://lifepage-server.onrender.com/api/user";
+// const BASE_URL = "https://lifepage-server.onrender.com/api/post";
+// const USER_URL = "https://lifepage-server.onrender.com/api/user";
+const BASE_URL = "https://lifepage-server.vercel.app/api/post";
+const USER_URL = "https://lifepage-server.vercel.app/api/user";
 
 export const usePostStore = create<PostStore>((set, get) => ({
   userId:
@@ -86,23 +88,18 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Fetch all posts
   fetchPosts: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}posts/`);
+      const response = await axios.get(`${BASE_URL}/posts/`);
       const posts = response.data;
 
       const updatedPosts = await Promise.all(
         posts.map(async (post: any) => {
           try {
-            const userResponse = await axios.get(
-              `https://lifepage-server.onrender.com/api/user/profiles/${post.user}/`
-            );
-            await axios.get(
-              `${BASE_URL}likepost/?post=${post.id}`
-            );
+            const userResponse = await axios.get(`${USER_URL}/profiles/${post.user}/`);
+            await axios.get(  `${BASE_URL}/likepost/?post=${post.id}` );
 
             return {
               ...post,
               userDetails: userResponse.data,
-              // likes: likeResponse.data.map((like: any) => like.user), // Map users who liked the post
             };
           } catch (error) {
             console.error(
@@ -128,7 +125,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
         console.error("User ID is not available.");
         return;
       }
-      const response = await axios.get(`${BASE_URL}posts/?user=${userId}`);
+      const response = await axios.get(`${BASE_URL}/posts/?user=${userId}`);
       set({ userPosts: response.data });
     } catch (error) {
       console.error("Failed to fetch user posts:", error);
@@ -138,7 +135,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Create a new post
   createPost: async (data: FormData) => {
     try {
-      await axios.post(`${BASE_URL}posts/`, data, {
+      await axios.post(`${BASE_URL}/posts/`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       await get().fetchPosts();
@@ -151,7 +148,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Update an existing post
   updatePost: async (id, data) => {
     try {
-      await axios.put(`${BASE_URL}posts/${id}/`, data);
+      await axios.put(`${BASE_URL}/posts/${id}/`, data);
       await get().fetchPosts();
     } catch (error) {
       console.error("Failed to update post:", error);
@@ -161,7 +158,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Delete a post
   deletePost: async (id) => {
     try {
-      await axios.delete(`${BASE_URL}posts/${id}/`);
+      await axios.delete(`${BASE_URL}/posts/${id}/`);
       await get().fetchPosts();
     } catch (error) {
       console.error("Failed to delete post:", error);
@@ -171,7 +168,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Like a post
   likePost: async (data) => {
     try {
-      await axios.post(`${BASE_URL}likepost/`, data);
+      await axios.post(`${BASE_URL}/likepost/`, data);
     } catch (error: any) {
       console.error(
         "Failed to create like:",
@@ -183,7 +180,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Fetch likes for a post
   fetchLikes: async (postId) => {
     try {
-      const response = await axios.get(`${BASE_URL}likepost/?post=${postId}`);
+      const response = await axios.get(`${BASE_URL}/likepost/?post=${postId}`);
       set({ likes: response.data as Like[] });
     } catch (error) {
       console.error("Failed to fetch likes:", error);
@@ -213,7 +210,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Add a comment to a post
   addComment: async (data) => {
     try {
-      await axios.post(`${BASE_URL}commentpost/`, data);
+      await axios.post(`${BASE_URL}/commentpost/`, data);
       await get().fetchComments(data.post);
     } catch (error) {
       console.error("Failed to add comment:", error);
@@ -227,7 +224,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
       if (!userId) throw new Error('User ID not found');
       
       const response = await axios.get(
-        `${BASE_URL}commentpost/?post=${postId}`
+        `${BASE_URL}/commentpost/?post=${postId}`
       );
   
       const commentsData = response.data;
@@ -258,7 +255,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Update a comment
   updateComment: async (id, data) => {
     try {
-      await axios.put(`${BASE_URL}commentpost/${id}/`, data);
+      await axios.put(`${BASE_URL}/commentpost/${id}/`, data);
       const currentComments = get().comments;
       set({
         comments: currentComments.map((comment) =>
@@ -273,7 +270,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Delete a comment
   deleteComment: async (id) => {
     try {
-      await axios.delete(`${BASE_URL}commentpost/${id}/`);
+      await axios.delete(`${BASE_URL}/commentpost/${id}/`);
       const currentComments = get().comments;
       set({ comments: currentComments.filter((comment) => comment.id !== id) });
     } catch (error) {
@@ -289,14 +286,14 @@ export const usePostStore = create<PostStore>((set, get) => ({
         console.error("User ID is not available.");
         return;
       }
-      const response = await axios.get(`${BASE_URL}bookmarks/?user=${userId}`);
+      const response = await axios.get(`${BASE_URL}/bookmarks/?user=${userId}`);
       const bookmarks = response.data;
 
       const updatedBookmarks = await Promise.all(
         bookmarks.map(async (bookmark: any) => {
           try {
             const postResponse = await axios.get(
-              `${BASE_URL}posts/${bookmark.post}/`
+              `${BASE_URL}/posts/${bookmark.post}/`
             );
             return { ...bookmark, postDetails: postResponse.data };
           } catch (error) {
@@ -318,7 +315,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Add a bookmark
   addBookmark: async (data) => {
     try {
-      await axios.post(`${BASE_URL}bookmarks/`, data);
+      await axios.post(`${BASE_URL}/bookmarks/`, data);
       await get().fetchBookmarks();
     } catch (error) {
       console.error("Failed to add bookmark:", error);
@@ -328,7 +325,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Remove a bookmark
   removeBookmark: async (bookmarkId) => {
     try {
-      await axios.delete(`${BASE_URL}bookmarks/${bookmarkId}/`);
+      await axios.delete(`${BASE_URL}/bookmarks/${bookmarkId}/`);
       const currentBookmarks = get().bookmarks;
       set({
         bookmarks: currentBookmarks.filter(
