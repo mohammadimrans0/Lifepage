@@ -5,15 +5,14 @@ import Link from "next/link";
 import {
   Search,
   Menu,
-  MessageSquareText,
-  Bell,
+  // MessageSquareText,
+  // Bell,
 } from "lucide-react";
 import Image from "next/image";
 import { useUserStore } from "@/stores/useUserStore";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isProductsOpen, setIsProductsOpen] = useState(false);
 
   const { userId, profile, fetchProfile } = useUserStore();
 
@@ -54,22 +53,16 @@ const Navbar = () => {
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center space-x-4">
-              <Link
-                href="/"
-                className="px-3 py-2 rounded-md font-medium text-gray-700 hover:text-blue-600"
-              >
-                My Network
-              </Link>
-              <button className="bg-gray-200 text-white px-2 py-2 rounded-md text-sm ">
+              {/* <button className="bg-gray-200 text-white px-2 py-2 rounded-md text-sm ">
                 <MessageSquareText className="text-slate-800" />
               </button>
               <button className="bg-gray-200 text-white px-2 py-2 rounded-md text-sm ">
                 <Bell className="text-slate-800" />
-              </button>
+              </button> */}
 
               <div>
                 {profile?.image ? (
-                  <Link href="/user/profile">
+                  <Link href="/user/profile" className="flex items-center gap-x-1">
                     <Image
                       src={profile.image}
                       alt="Profile"
@@ -77,6 +70,7 @@ const Navbar = () => {
                       height={40}
                       className="rounded-full border-2 border-blue-500 shadow-md object-cover"
                     />
+                    <p className="text-xl">{profile?.user.username}</p>
                   </Link>
                 ) : (
                   <Link href="/auth/login">
@@ -108,41 +102,14 @@ const Navbar = () => {
             >
               Profile
             </Link>
-            <button
-              onClick={() => setIsProductsOpen(!isProductsOpen)}
-              className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-            >
-              Products
-            </button>
-            {isProductsOpen && (
-              <div className="pl-4">
-                <Link
-                  href="/products/hardware"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  Hardware
-                </Link>
-                <Link
-                  href="/products/software"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  Software
-                </Link>
-                <Link
-                  href="/products/services"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  Services
-                </Link>
-              </div>
-            )}
+           
             <Link
-              href="/contact"
+              href="/settings/profile-setting"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
             >
-              Contact
+              Settings
             </Link>
-            <button className="w-full text-left px-3 py-2 rounded-md text-base font-medium bg-blue-500 text-white hover:bg-blue-600">
+            <button className="w-full text-left px-3 py-2 rounded-md text-base font-medium bg-blue-500 text-white hover:bg-blue-500">
               Sign In
             </button>
           </div>
