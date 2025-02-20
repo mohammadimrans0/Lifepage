@@ -10,7 +10,7 @@ export default function LeftSidebar() {
 
   useEffect(() => {
     if (userId) {
-      fetchProfile();
+      fetchProfile(userId);
     }
   }, [userId, fetchProfile]);
 
@@ -79,6 +79,8 @@ export default function LeftSidebar() {
               Connections
             </p>
           </div>
+          <Link href="/latest-news">
+          
           <div className="flex items-center gap-2">
             <Image
               src="/images/image-icon/news.svg"
@@ -89,7 +91,7 @@ export default function LeftSidebar() {
             <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
               Latest News
             </p>
-          </div>
+          </div>          </Link>
           {/* <div className="flex items-center gap-2">
             <Image
               src="/images/image-icon/events.svg"

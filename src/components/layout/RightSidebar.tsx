@@ -1,16 +1,40 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function RightSidebar() {
-  const { fetchAllProfile, allProfiles } = useUserStore();
+  const router = useRouter();
+  const { followUser, unfollowUser } = useUserStore();
+  const { userId, fetchAllProfile, allProfiles } = useUserStore();
+  const [isFollowing, setIsFollowing] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     fetchAllProfile();
   }, [fetchAllProfile]);
+
+  const handleFollowToggle = (followingId: string) => {
+    const followerId = userId;
+
+    if (!followerId) {
+      setTimeout(() => router.push("/auth/login"), 2000);
+      return;
+    }
+
+    setIsFollowing((prev) => {
+      const following = !!prev[followingId];
+
+      if (following) {
+        unfollowUser({ followerId, followingId });
+      } else {
+        followUser({ followerId, followingId });
+      }
+
+      return { ...prev, [followingId]: !following };
+    });
+  };
 
   return (
     <div className="py-6">
@@ -23,7 +47,7 @@ export default function RightSidebar() {
               key={profile.id || `profile-${index}`}
               className="flex items-center justify-between py-2"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 cursor-pointer">
                 <Image
                   src={profile.image || "/default-avatar.png"}
                   alt={profile?.user.username || "User Avatar"}
@@ -36,8 +60,13 @@ export default function RightSidebar() {
                 </span>
               </div>
 
-              <button className="p-2 rounded-full bg-blue-200">
-                <Plus size={20} className="text-blue-500" />
+              <button
+                onClick={() => handleFollowToggle(profile?.user.id)}
+                className={`px-4 py-1 border rounded-lg text-white ${
+                  isFollowing[profile?.user.id] ? "bg-gray-500" : "bg-blue-500"
+                }`}
+              >
+                {isFollowing[profile?.user.id] ? "Unfollow" : "Follow"}
               </button>
             </div>
           ))}
@@ -54,7 +83,7 @@ export default function RightSidebar() {
         <div className="flex flex-col gap-y-4 mb-4">
           <div>
             <p className="font-medium hover:text-blue-500 cursor-pointer">
-              Ten questions you should answer truthfully
+              Breaking News: Market Hits Record High
             </p>
             <p className="text-sm">2hr</p>
           </div>

@@ -5,7 +5,6 @@ import { useUserStore } from "@/stores/useUserStore";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import Image from "next/image";
-import { FaApple, FaGoogle, FaFacebook } from "react-icons/fa";
 
 const SignupPage: React.FC = () => {
   const signup = useUserStore((state) => state.signup);
@@ -38,8 +37,8 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="flex flex-col md:flex-row items-center border max-w-4xl">
+    <div className="flex items-center justify-center my-8 md:my-16">
+      <div className="flex flex-col md:flex-row items-center border rounded-lg max-w-3xl">
         <ToastContainer />
         <div className="">
           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
@@ -57,7 +56,7 @@ const SignupPage: React.FC = () => {
                   required
                   value={formData.username}
                   onChange={handleChange}
-                  className="w-96 p-2 border rounded"
+                  className="w-72 p-2 border rounded"
                 />
               </div>
               <div className="grid gap-2">
@@ -70,7 +69,7 @@ const SignupPage: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-96 p-2 border rounded"
+                  className="w-72 p-2 border rounded"
                 />
               </div>
               <div className="grid gap-2">
@@ -79,10 +78,11 @@ const SignupPage: React.FC = () => {
                   id="password"
                   name="password"
                   type="password"
+                  placeholder="Your password"
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-96 p-2 border rounded"
+                  className="w-72 p-2 border rounded"
                 />
               </div>
               <div className="grid gap-2">
@@ -91,44 +91,26 @@ const SignupPage: React.FC = () => {
                   id="confirm_password"
                   name="confirm_password"
                   type="confirm_password"
+                  placeholder="Confirm password"
                   required
                   value={formData.confirm_password}
                   onChange={handleChange}
-                  className="w-96 p-2 border rounded"
+                  className="w-72 p-2 border rounded"
                 />
               </div>
               <button
                 type="submit"
-                className="w-96 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                className="w-72 mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
               >
                 Signup
               </button>
-              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border w-96">
+              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border w-72">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
-              <div className="flex items-center justify-around gap-4 w-96">
-                <button
-                  type="button"
-                  className="flex items-center gap-x-1 w-28 justify-center bg-gray-100 p-2 rounded"
-                >
-                  <FaApple /> Apple
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center gap-x-1 w-28 justify-center bg-gray-100 p-2 rounded"
-                >
-                  <FaGoogle /> Google
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center gap-x-1 w-28 justify-center bg-gray-100 p-2 rounded"
-                >
-                  <FaFacebook /> Meta
-                </button>
-              </div>
-              <div className="text-center text-sm">
+             
+              <div className="text-center text-sm w-72">
                 Already have an account?{" "}
                 <Link
                   href="/auth/login"
@@ -141,13 +123,13 @@ const SignupPage: React.FC = () => {
           </form>
         </div>
 
-        <div>
+        <div className="hidden md:block">
           <Image
             src="/images/login-image.png"
             alt="login-image"
-            width={400}
-            height={400}
-            className="rounded-lg object-contain"
+            width={350}
+            height={380}
+            className="md:rounded-r-lg object-contain"
           />
         </div>
       </div>

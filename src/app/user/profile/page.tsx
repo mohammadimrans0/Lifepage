@@ -15,7 +15,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (userId) {
-      fetchProfile();
+      fetchProfile(userId);
     }else{
       setTimeout(() => router.push('/auth/login'), 2000);
     }
@@ -29,24 +29,24 @@ const ProfilePage = () => {
     <div className="min-h-screen">
       <div className="px-2 md:px-16 py-8">
         {/* Profile Header */}
-        <div className="flex items-center space-x-4 md:space-x-8">
+        <div className="flex items-center space-x-2 md:space-x-8">
           <Image
             src={profile.image}
             alt="Profile"
-            width={200}
-            height={200}
-            className="rounded-full border-4 border-blue-300 shadow-md object-cover"
+            width={160}
+            height={0}
+            className="rounded-full w-[150px] h-[150px] lg:w-[200px] lg:h-[200px] border-4 border-blue-300 shadow-md object-cover"
           />
           <div className="flex flex-col">
             <h1 className="text-3xl font-semibold">{profile?.user.username}</h1>
             <p className="mt-1">{profile.name}</p>
-            <div className="flex flex-wrap space-x-6 mt-2">
-              <div className="flex items-center">
+            <div className="flex items-center mt-1">
                 <span className="font-semibold mr-1">
                   {profile.followers_count}
                 </span>{" "}
                 Posts
               </div>
+            <div className="flex flex-wrap space-x-4 mt-2">
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
                   {profile.followers_count}

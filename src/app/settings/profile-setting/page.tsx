@@ -13,7 +13,7 @@ const ProfileSettingPage = () => {
 
   useEffect(() => {
     if (userId) {
-      fetchProfile();
+      fetchProfile(userId);
     } else {
       setTimeout(() => router.push("/auth/login"), 2000);
     }

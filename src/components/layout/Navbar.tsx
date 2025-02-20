@@ -18,7 +18,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (userId) {
-      fetchProfile();
+      fetchProfile(userId);
     }
   }, [userId, fetchProfile]);
 

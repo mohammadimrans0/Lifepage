@@ -32,7 +32,7 @@ type UserStore = {
   login: (data: { username: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   fetchAllProfile: () => Promise<void>;
-  fetchProfile: () => Promise<void>;
+  fetchProfile: (userId : string) => Promise<void>;
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
   followUser: (data: { followerId: string; followingId: string }) => Promise<void>;
   unfollowUser: (data: { followerId: string; followingId: string }) => Promise<void>;
@@ -95,10 +95,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  fetchProfile: async () => {
-    const userId = get().userId;
-    if (!userId) return;
-
+  fetchProfile: async (userId) => {
     try {
       const response = await axios.get(`${BASE_URL}/user/profiles/${userId}`);
       set({ profile: response.data });
