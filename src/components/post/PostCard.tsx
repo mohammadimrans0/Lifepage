@@ -227,7 +227,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   <div>
                     <div className="flex gap-2 items-center w-full mb-2">
                       <Image
-                        src={commentData.user.image}
+                        src={commentData.userDetails.image}
                         alt="User"
                         width={48}
                         height={48}
@@ -235,7 +235,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                       />
 
                       <div>
-                        <p className="font-semibold">{commentData.user.name}</p>
+                        <p className="font-semibold">{commentData.userDetails.name}</p>
                         <p className="text-xs text-gray-500">
                           {new Date(commentData.created_at).toLocaleString()}
                         </p>

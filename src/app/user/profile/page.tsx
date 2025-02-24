@@ -7,9 +7,11 @@ import UserPost from "@/components/user/profile/UserPost";
 import BookMark from "@/components/user/profile/BookMark";
 import { Bookmark, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { usePostStore } from "@/stores/usePostStore";
 
 const ProfilePage = () => {
   const { userId, profile, fetchProfile } = useUserStore();
+  const { userPosts } = usePostStore(); 
   const [activeTab, setActiveTab] = useState("posts");
   const router = useRouter();
 
@@ -42,7 +44,7 @@ const ProfilePage = () => {
             <p className="mt-1">{profile.name}</p>
             <div className="flex items-center mt-1">
                 <span className="font-semibold mr-1">
-                  {profile.followers_count}
+                {userPosts.length}
                 </span>{" "}
                 Posts
               </div>

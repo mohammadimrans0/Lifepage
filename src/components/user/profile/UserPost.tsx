@@ -15,6 +15,8 @@ export default function UserPost() {
     }
   }, [userId, fetchUserPosts]);
 
+  console.log(userPosts.length);
+
   return (
     <div>
   {userPosts.length > 0 ? (

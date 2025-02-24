@@ -24,7 +24,7 @@ export interface Like {
 interface Comment {
   id: string;
   post: string;
-  user: {
+  userDetails: {
     name: string;
     image: string;
   };
@@ -95,8 +95,6 @@ export const usePostStore = create<PostStore>((set, get) => ({
         posts.map(async (post: any) => {
           try {
             const userResponse = await axios.get(`${USER_URL}/profiles/${post.user}/`);
-            await axios.get(  `${BASE_URL}/likepost/?post=${post.id}` );
-
             return {
               ...post,
               userDetails: userResponse.data,
@@ -106,7 +104,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
               `Failed to fetch user details or likes for post ID: ${post.id}`,
               error
             );
-            return { ...post, userDetails: null, likes: [] };
+            return { ...post, userDetails: null };
           }
         })
       );
@@ -197,7 +195,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   
       if (response.status === 204) {
         console.log("Like removed successfully.");
-        await get().fetchPosts(); // Refresh the UI after like removal
+        await get().fetchPosts();
       } else {
         console.log("Failed to remove like.");
       }
@@ -211,6 +209,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   addComment: async (data) => {
     try {
       await axios.post(`${BASE_URL}/commentpost/`, data);
+      console.log(data)
       await get().fetchComments(data.post);
     } catch (error) {
       console.error("Failed to add comment:", error);
@@ -220,33 +219,25 @@ export const usePostStore = create<PostStore>((set, get) => ({
   // Fetch comments for a specific post
   fetchComments: async (postId) => {
     try {
-      const userId = get().userId;
-      if (!userId) throw new Error('User ID not found');
-      
-      const response = await axios.get(
-        `${BASE_URL}/commentpost/?post=${postId}`
-      );
-  
+      const response = await axios.get(`${BASE_URL}/commentpost/?post=${postId}`);
       const commentsData = response.data;
 
-      // Fetching the full user data (username, userImage, etc.)
-    const userResponse = await axios.get(`${USER_URL}/profiles/${userId}`);
-    const userData = userResponse.data;
-
-    console.log(userData)
+      const updatedcommentsData = await Promise.all(
+        commentsData.map(async (comment: any) => {
+          try {
+            const userResponse = await axios.get(`${USER_URL}/profiles/${comment.user}/`);
+            return {
+              ...comment,
+              userDetails: userResponse.data,
+            };
+          } catch (error) {
+            console.error("Failed to fetch user details.", error);
+            return { ...comment, userDetails: null };
+          }
+        })
+      );
   
-      // Pass user data along with each comment
-      const commentsWithUserData = commentsData.map((comment : Comment) => ({
-        ...comment,
-        user: {
-          // userId: userData.id,
-          name: userData.name,
-          image: userData.image, // Assuming the image field is named `profileImage`
-          // Add any other user details you need
-        },
-      }));
-  
-      set({ comments: commentsWithUserData });
+      set({ comments: updatedcommentsData });
     } catch (error) {
       console.error("Failed to fetch comments:", error);
     }
