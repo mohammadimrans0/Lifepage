@@ -9,39 +9,39 @@ import { Bookmark, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePostStore } from "@/stores/usePostStore";
 
-const ProfilePage = () => {
-  const { userId, profile, fetchProfile } = useUserStore();
+const LoggedInUserProfilePage = () => {
+  const { userId, loggedInProfile, fetchLoggedInProfile } = useUserStore();
   const { userPosts } = usePostStore(); 
   const [activeTab, setActiveTab] = useState("posts");
   const router = useRouter();
 
   useEffect(() => {
     if (userId) {
-      fetchProfile(userId);
+      fetchLoggedInProfile();
     }else{
       setTimeout(() => router.push('/auth/login'), 2000);
     }
-  }, [userId, fetchProfile, router]);
+  }, [userId, fetchLoggedInProfile, router]);
 
-  if (!profile) {
+  if (!loggedInProfile) {
     return <div className="">Loading profile...</div>;
   }
 
   return (
     <div className="min-h-screen">
-      <div className="px-2 md:px-16 py-8">
+      <div className="px-2 md:px-16 py-6">
         {/* Profile Header */}
         <div className="flex items-center space-x-2 md:space-x-8">
           <Image
-            src={profile.image}
+            src={loggedInProfile.image}
             alt="Profile"
             width={160}
             height={0}
             className="rounded-full w-[150px] h-[150px] lg:w-[200px] lg:h-[200px] border-4 border-blue-300 shadow-md object-cover"
           />
           <div className="flex flex-col">
-            <h1 className="text-3xl font-semibold">{profile?.user.username}</h1>
-            <p className="mt-1">{profile.name}</p>
+            <h1 className="text-3xl font-semibold">{loggedInProfile?.user.username}</h1>
+            <p className="mt-1">{loggedInProfile.name}</p>
             <div className="flex items-center mt-1">
                 <span className="font-semibold mr-1">
                 {userPosts.length}
@@ -51,37 +51,29 @@ const ProfilePage = () => {
             <div className="flex flex-wrap space-x-4 mt-2">
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
-                  {profile.followers_count}
+                  {loggedInProfile.followers_count}
                 </span>{" "}
                 Followers
               </div>
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
-                  {profile.following_count}
+                  {loggedInProfile.following_count}
                 </span>{" "}
                 Following
               </div>
             </div>
 
             <div className="mt-2">
-              <p>{profile.bio}</p>
+              <p>{loggedInProfile.bio}</p>
             </div>
 
-            <div className="flex space-x-2 mt-4">
-              <button className="px-4 py-1 bg-blue-500 text-white rounded-lg transition duration-200">
-                Follow
-              </button>
-              <button className="px-4 py-1 bg-transparent rounded-lg hover:border hover:text-blue-500 transition duration-200">
-                Message
-              </button>
-            </div>
           </div>
         </div>
       </div>
 
 
       {/* Posts and Bookmark Section */}
-      <div className="p-8 border-t border-slate-400">
+      <div className="p-6 border-t border-slate-400">
       {/* Tab Navigation */}
       <div className="flex justify-around items-center mb-8">
         <button
@@ -112,11 +104,11 @@ const ProfilePage = () => {
       <div>
         {activeTab === "posts" ? (
           <div>
-            <UserPost />
+            {userId && <UserPost userId={userId} />}
           </div>
         ) : (
           <div>
-            <BookMark />
+            {userId && <BookMark userId={userId} />}
           </div>
         )}
       </div>
@@ -126,4 +118,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default LoggedInUserProfilePage;

@@ -4,47 +4,47 @@ import { useEffect } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import Image from "next/image";
 import Link from "next/link";
+import { usePostStore } from "@/stores/usePostStore";
 
 export default function LeftSidebar() {
-  const { userId, profile, fetchProfile } = useUserStore();
+  const { loggedInProfile, fetchLoggedInProfile } = useUserStore();
+  const { userPosts } = usePostStore();
 
   useEffect(() => {
-    if (userId) {
-      fetchProfile(userId);
-    }
-  }, [userId, fetchProfile]);
+    fetchLoggedInProfile();
+  }, [fetchLoggedInProfile]);
 
   return (
     <div className="py-6">
       <div className="mb-8 bg-white px-8 py-4 rounded-lg border drop-shadow-md">
         {/* Profile Section */}
-        {profile ? (
+        {loggedInProfile ? (
           <div className="flex flex-col items-center justify-center gap-y-2">
             <Image
-              src={profile.image}
+              src={loggedInProfile.image}
               alt="profile image"
               width={64}
               height={36}
             />
-            <h1 className="text-2xl font-semibold">{profile.name}</h1>
-            <p>{profile.bio}</p>
+            <h1 className="text-2xl font-semibold">{loggedInProfile.name}</h1>
+            <p>{loggedInProfile.bio}</p>
 
             <div className="flex items-center justify-center gap-x-6">
               <div className="flex flex-col items-center">
                 <span className="font-semibold">
-                  {profile.followers_count}
+                {userPosts.length}
                 </span>{" "}
                 Posts
               </div>
               <div className="flex flex-col items-center">
                 <span className="font-semibold">
-                  {profile.followers_count}
+                  {loggedInProfile.followers_count}
                 </span>{" "}
                 Followers
               </div>
               <div className="flex flex-col items-center">
                 <span className="font-semibold">
-                  {profile.following_count}
+                  {loggedInProfile.following_count}
                 </span>{" "}
                 Following
               </div>

@@ -26,12 +26,14 @@ type UserProfile = {
 
 type UserStore = {
   userId: string | null;
+  loggedInProfile: UserProfile | null;
   profile: UserProfile | null;
   allProfiles: UserProfile[];
   signup: (data: { username: string; email: string; password: string; confirm_password: string }) => Promise<void>;
   login: (data: { username: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   fetchAllProfile: () => Promise<void>;
+  fetchLoggedInProfile: () => Promise<void>;
   fetchProfile: (userId : string) => Promise<void>;
   updateProfile: (data: Partial<UserProfile>) => Promise<void>;
   followUser: (data: { followerId: string; followingId: string }) => Promise<void>;
@@ -40,6 +42,7 @@ type UserStore = {
 
 export const useUserStore = create<UserStore>((set, get) => ({
   userId: typeof window !== 'undefined' ? localStorage.getItem('lifepage_user_id') || null : null,
+  loggedInProfile: null,
   profile: null,
   allProfiles: [],
 
@@ -95,7 +98,19 @@ export const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  fetchProfile: async (userId) => {
+  fetchLoggedInProfile: async () => {
+    const userId = get().userId;
+    if (!userId) return;
+
+    try {
+      const response = await axios.get(`${BASE_URL}/user/profiles/${userId}`);
+      set({ loggedInProfile: response.data });
+    } catch (error: any) {
+      console.error('Error fetching profile:', error.response?.data || error.message);
+    }
+  },
+
+  fetchProfile: async (userId: string) => {
     try {
       const response = await axios.get(`${BASE_URL}/user/profiles/${userId}`);
       set({ profile: response.data });

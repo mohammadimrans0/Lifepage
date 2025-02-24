@@ -1,17 +1,15 @@
 import { usePostStore } from "@/stores/usePostStore";
-import { useUserStore } from "@/stores/useUserStore";
 import { useEffect } from "react";
 import Image from "next/image";
 import { Heart, MessageCircle } from "lucide-react";
 
-export default function BookMark() {
-  const { userId } = useUserStore();
+export default function BookMark({ userId }: { userId: string }) {
   const { bookmarks, fetchBookmarks } = usePostStore();
 
   //   Fetch profile when the component mounts
   useEffect(() => {
     if (userId) {
-      fetchBookmarks();
+      fetchBookmarks(userId);
     }
   }, [userId, fetchBookmarks]);
   return (

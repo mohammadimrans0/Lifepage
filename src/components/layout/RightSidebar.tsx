@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function RightSidebar() {
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function RightSidebar() {
               key={profile.id || `profile-${index}`}
               className="flex items-center justify-between py-2"
             >
+              <Link href={`/user/profiles/${profile?.user.id}`}>
               <div className="flex items-center gap-3 cursor-pointer">
                 <Image
                   src={profile.image || "/default-avatar.png"}
@@ -59,6 +61,7 @@ export default function RightSidebar() {
                   {profile?.user.username || "Unknown User"}
                 </span>
               </div>
+              </Link>
 
               <button
                 onClick={() => handleFollowToggle(profile?.user.id)}

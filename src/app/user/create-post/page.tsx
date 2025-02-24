@@ -76,7 +76,7 @@ const AddPost = () => {
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               placeholder="What's on your mind?"
-              className="flex-grow px-4 py-2 text-sm border-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+              className="flex-grow px-4 py-2 text-sm border-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
             />
 
             <button

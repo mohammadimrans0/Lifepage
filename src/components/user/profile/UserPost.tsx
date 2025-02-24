@@ -1,21 +1,17 @@
 import { usePostStore } from "@/stores/usePostStore";
-import { useUserStore } from "@/stores/useUserStore";
 import { useEffect } from "react";
 import Image from "next/image";
 import { Heart, MessageCircle } from "lucide-react";
 
-export default function UserPost() {
-  const { userId } = useUserStore();
+export default function UserPost({ userId }: { userId: string }) {
   const { fetchUserPosts, userPosts } = usePostStore();
 
   //   Fetch profile when the component mounts
   useEffect(() => {
     if (userId) {
-      fetchUserPosts();
+      fetchUserPosts(userId);
     }
   }, [userId, fetchUserPosts]);
-
-  console.log(userPosts.length);
 
   return (
     <div>

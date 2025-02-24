@@ -14,13 +14,11 @@ import { useUserStore } from "@/stores/useUserStore";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { userId, profile, fetchProfile } = useUserStore();
+  const { loggedInProfile, fetchLoggedInProfile } = useUserStore();
 
   useEffect(() => {
-    if (userId) {
-      fetchProfile(userId);
-    }
-  }, [userId, fetchProfile]);
+    fetchLoggedInProfile();
+  }, [fetchLoggedInProfile]);
 
   return (
     <nav className="bg-white px-6 drop-shadow-md">
@@ -61,16 +59,19 @@ const Navbar = () => {
               </button> */}
 
               <div>
-                {profile?.image ? (
-                  <Link href="/user/profile" className="flex items-center gap-x-1">
+                {loggedInProfile ? (
+                  <Link
+                    href="/user/profile"
+                    className="flex items-center gap-x-1"
+                  >
                     <Image
-                      src={profile.image}
+                      src={loggedInProfile.image}
                       alt="Profile"
                       width={40}
                       height={40}
                       className="rounded-full border-2 border-blue-500 shadow-md object-cover"
                     />
-                    <p className="text-xl">{profile?.user.username}</p>
+                    <p className="text-xl">{loggedInProfile?.user.username}</p>
                   </Link>
                 ) : (
                   <Link href="/auth/login">
@@ -102,7 +103,7 @@ const Navbar = () => {
             >
               Profile
             </Link>
-           
+
             <Link
               href="/settings/profile-setting"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"

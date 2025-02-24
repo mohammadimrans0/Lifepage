@@ -49,7 +49,7 @@ interface PostStore {
   likes: Like[];
 
   fetchPosts: () => Promise<void>;
-  fetchUserPosts: () => Promise<void>;
+  fetchUserPosts: (id : string) => Promise<void>;
   createPost: (data: FormData) => Promise<void>;
   updatePost: (id: string, data: Partial<Post>) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
@@ -64,7 +64,7 @@ interface PostStore {
   fetchComments: (postId: string) => Promise<void>;
   updateComment: (id: string, data: Partial<Comment>) => Promise<void>;
   deleteComment: (id: string) => Promise<void>;
-  fetchBookmarks: () => Promise<void>;
+  fetchBookmarks: (id : string) => Promise<void>;
   addBookmark: (data: { post: string; user: string | null }) => Promise<void>;
   removeBookmark: (bookmarkId: string) => Promise<void>;
 }
@@ -116,9 +116,8 @@ export const usePostStore = create<PostStore>((set, get) => ({
   },
 
   // Fetch all user posts
-  fetchUserPosts: async () => {
+  fetchUserPosts: async (userId : string) => {
     try {
-      const userId = get().userId;
       if (!userId) {
         console.error("User ID is not available.");
         return;
@@ -270,9 +269,8 @@ export const usePostStore = create<PostStore>((set, get) => ({
   },
 
   // Fetch all bookmarks
-  fetchBookmarks: async () => {
+  fetchBookmarks: async (userId : string) => {
     try {
-      const userId = get().userId;
       if (!userId) {
         console.error("User ID is not available.");
         return;
@@ -307,7 +305,6 @@ export const usePostStore = create<PostStore>((set, get) => ({
   addBookmark: async (data) => {
     try {
       await axios.post(`${BASE_URL}/bookmarks/`, data);
-      await get().fetchBookmarks();
     } catch (error) {
       console.error("Failed to add bookmark:", error);
     }
