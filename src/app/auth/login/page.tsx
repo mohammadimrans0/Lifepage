@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center my-8 md:my-16">
+    <div className="flex items-center justify-center my-8 md:mt-28">
       <div className="flex flex-col md:flex-row items-center border rounded-lg max-w-2xl">
         <ToastContainer />
         <div className="w-full mx-auto">

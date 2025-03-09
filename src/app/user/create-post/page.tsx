@@ -63,9 +63,9 @@ const AddPost = () => {
   };
 
   return (
-    <div className="p-2 md:p-6 flex items-center justify-center">
+    <div className="p-2 md:p-6 md:mt-16 flex items-center justify-center">
       <ToastContainer />
-      <div className="w-full max-w-2xl bg-white rounded-lg drop-shadow-md overflow-hidden">
+      <div className="w-full max-w-2xl bg-white border rounded-lg drop-shadow-md overflow-hidden">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col space-y-2 max-w-2xl mx-auto p-4 bg-white shadow-sm rounded-lg"

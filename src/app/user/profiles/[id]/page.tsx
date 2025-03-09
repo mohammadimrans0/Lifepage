@@ -22,7 +22,7 @@ const ProfilePage = () => {
     if (userId) {
       fetchProfile(userId);
     }
-  }, [fetchProfile, router]);
+  }, [fetchProfile, userId, router]);
 
   if (!profile) {
     return <div className="">Loading profile...</div>;
@@ -30,7 +30,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="px-2 md:px-16 py-8">
+      <div className="px-2 md:px-16 py-6 mt-16">
         {/* Profile Header */}
         <div className="flex items-center space-x-2 md:space-x-8">
           <Image

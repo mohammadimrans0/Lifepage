@@ -21,7 +21,7 @@ const Navbar = () => {
   }, [fetchLoggedInProfile]);
 
   return (
-    <nav className="bg-white px-6 drop-shadow-md">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white px-6 drop-shadow-md overflow-hidden">
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -37,13 +37,13 @@ const Navbar = () => {
               </Link>
             </div>
             <div className="hidden md:block ml-6">
-              <div className="flex items-center">
+              <div className="flex items-center border border-gray-300 rounded-full px-3 py-2">
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full focus:outline-none"
                 />
-                <button className="ml-2 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                <button className="text-gray-400">
                   <Search size={20} />
                 </button>
               </div>

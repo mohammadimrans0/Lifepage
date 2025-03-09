@@ -15,140 +15,91 @@ export default function LeftSidebar() {
   }, [fetchLoggedInProfile]);
 
   return (
-    <div className="py-6">
-      <div className="mb-8 bg-white px-8 py-4 rounded-lg border drop-shadow-md">
-        {/* Profile Section */}
+    <div className="fixed top-16 left-8 h-[calc(100vh-64px)] w-[350px] px-4 py-6 bg-white border-r drop-shadow-md overflow-hidden">
+      <div className="mb-8 px-6 py-4 rounded-lg">
         {loggedInProfile ? (
-          <div className="flex flex-col items-center justify-center gap-y-2">
+          <div className="flex flex-col items-center gap-y-2">
             <Image
               src={loggedInProfile.image}
               alt="profile image"
               width={64}
-              height={36}
+              height={64}
+              className="rounded-full"
             />
-            <h1 className="text-2xl font-semibold">{loggedInProfile.name}</h1>
-            <p>{loggedInProfile.bio}</p>
+            <h1 className="text-xl font-semibold">{loggedInProfile.name}</h1>
+            <p className="text-sm text-gray-600">{loggedInProfile.bio}</p>
 
-            <div className="flex items-center justify-center gap-x-6">
-              <div className="flex flex-col items-center">
-                <span className="font-semibold">
-                {userPosts.length}
-                </span>{" "}
-                Posts
+            <div className="flex items-center justify-between gap-x-6 mt-2">
+              <div className="text-center">
+                <span className="font-semibold">{userPosts.length}</span>
+                <p className="text-xs">Posts</p>
               </div>
-              <div className="flex flex-col items-center">
+              <div className="text-center">
                 <span className="font-semibold">
                   {loggedInProfile.followers_count}
-                </span>{" "}
-                Followers
+                </span>
+                <p className="text-xs">Followers</p>
               </div>
-              <div className="flex flex-col items-center">
+              <div className="text-center">
                 <span className="font-semibold">
                   {loggedInProfile.following_count}
-                </span>{" "}
-                Following
+                </span>
+                <p className="text-xs">Following</p>
               </div>
             </div>
           </div>
-        ) : (
-          <></>
-        )}
-
-        <hr className="my-4" />
-
-        <div className="flex flex-col gap-y-6 mb-4">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/images/image-icon/home-feed.svg"
-              alt="feed"
-              width={24}
-              height={16}
-            />
-            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
-              Feed
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Image
-              src="/images/image-icon/connections.svg"
-              alt="feed"
-              width={24}
-              height={16}
-            />
-            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
-              Connections
-            </p>
-          </div>
-          <Link href="/latest-news">
-          
-          <div className="flex items-center gap-2">
-            <Image
-              src="/images/image-icon/news.svg"
-              alt="feed"
-              width={24}
-              height={16}
-            />
-            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
-              Latest News
-            </p>
-          </div>          </Link>
-          {/* <div className="flex items-center gap-2">
-            <Image
-              src="/images/image-icon/events.svg"
-              alt="feed"
-              width={24}
-              height={16}
-            />
-            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
-              Events
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Image
-              src="/images/image-icon/group.svg"
-              alt="feed"
-              width={24}
-              height={16}
-            />
-            <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
-              Groups
-            </p>
-          </div> */}
-          <Link href="/settings/profile-setting">
-            <div className="flex items-center gap-2">
-              <Image
-                src="/images/image-icon/settings.svg"
-                alt="feed"
-                width={24}
-                height={16}
-              />
-              <p className="text-xl font-medium hover:text-blue-500 cursor-pointer">
-                Settings
-              </p>
-            </div>
-          </Link>
-          
-        </div>
-
-        <Link href="/user/profile">
-          <h2 className="text- text-center text-blue-500 border-t py-2 cursor-pointer">
-            View Profile
-          </h2>
-        </Link>
+        ) : null}
       </div>
 
-      <div className="px-4 flex flex-wrap items-center justify-center gap-x-6 mb-2">
-        <p className="text-sm hover:text-blue-500 cursor-pointer">About</p>
-        <p className="text-sm hover:text-blue-500 cursor-pointer">Settings</p>
-        <p className="text-sm hover:text-blue-500 cursor-pointer">Support</p>
-        <p className="text-sm hover:text-blue-500 cursor-pointer">Docs</p>
-        <p className="text-sm hover:text-blue-500 cursor-pointer">Help</p>
-        <p className="text-sm hover:text-blue-500 cursor-pointer">
-          Privace & Terms
+      <hr className="my-4" />
+
+      <div className="flex flex-col gap-y-2 mb-4">
+        <SidebarLink href="/" src="/images/image-icon/home-feed.svg" label="Feed" />
+        <SidebarLink href="/connections" src="/images/image-icon/connections.svg" label="Connections" />
+        <SidebarLink href="/latest-news" src="/images/image-icon/news.svg" label="Latest News" />
+        <SidebarLink href="/settings/profile-setting" src="/images/image-icon/settings.svg" label="Settings" />
+      </div>
+
+      <Link href="/user/profile">
+        <h2 className="text-center text-blue-500 border-t py-4 cursor-pointer">
+          View Profile
+        </h2>
+      </Link>
+
+      <FooterLinks />
+
+      <p className="text-center text-sm text-gray-500">&copy; 2025 Lifepage</p>
+    </div>
+  );
+}
+
+interface SidebarLinkProps {
+  href: string;
+  src: string;
+  label: string;
+}
+
+function SidebarLink({ href, src, label }: SidebarLinkProps) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-200 ease-in-out hover:bg-slate-100 hover:text-blue-500"
+    >
+      <Image src={src} alt={label} width={24} height={16} />
+      <p className="text-xl font-medium cursor-pointer">{label}</p>
+    </Link>
+  );
+}
+
+function FooterLinks() {
+  const links = ["About", "Settings", "Support", "Docs", "Help", "Privacy & Terms"];
+  return (
+    <div className="px-4 flex flex-wrap justify-center gap-x-6 mb-2 text-sm text-gray-500">
+      {links.map((link) => (
+        <p key={link} className="cursor-pointer hover:text-blue-500">
+          {link}
         </p>
-      </div>
-
-      <p className="text-sm text-center">&copy; 2025 Lifepage</p>
+      ))}
     </div>
   );
 }

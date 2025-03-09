@@ -120,14 +120,6 @@ const ProfileSettingPage = () => {
           </div>
           <div className="flex items-center border-b">
             <label className="font-semibold border-r px-4 py-6 w-32">
-              Status
-            </label>
-            <p className="ml-4">
-              {renderEditableField("status", profile.status)}
-            </p>
-          </div>
-          <div className="flex items-center border-b">
-            <label className="font-semibold border-r px-4 py-6 w-32">
               Contact Info
             </label>
             <p className="ml-4">
