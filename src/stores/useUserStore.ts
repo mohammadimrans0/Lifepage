@@ -6,36 +6,47 @@ import { toast } from 'react-toastify';
 // Define the base URL
 const BASE_URL = 'https://lifepage-server.vercel.app/api';
 
-type UserProfile = {
-  user: any;
-  id: number;
-  username: string;
-  email: string;
-  name: string;
-  image: string;
-  bio: string;
-  status: string;
-  contact_info: string;
-  followers: any[];
-  following: any[];
-  followers_count: number;
-  following_count: number;
-  created_at: string;
-  updated_at: string;
-};
+interface FollowerFollowingProfile {
+    id: number;
+    name: string;
+    image: string;
+}
+
+interface Profile {
+    id: number;
+    name: string;
+    image: string;
+    bio: string;
+    status: string;
+    contact_info: string;
+    followers: FollowerFollowingProfile[];
+    following: FollowerFollowingProfile[];
+    followers_count: number;
+    following_count: number;
+    bookmarks: any[]; // You can define a more specific type for bookmarks if needed
+    created_at: string;
+    updated_at: string;
+}
+
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    profile: Profile;
+}
 
 type UserStore = {
   userId: string | null;
-  loggedInProfile: UserProfile | null;
-  profile: UserProfile | null;
-  allProfiles: UserProfile[];
+  loggedInProfile: User | null;
+  profile: User | null;
+  allProfiles: User[];
   signup: (data: { username: string; email: string; password: string; confirm_password: string }) => Promise<void>;
   login: (data: { username: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   fetchAllProfile: () => Promise<void>;
   fetchLoggedInProfile: () => Promise<void>;
   fetchProfile: (userId : string) => Promise<void>;
-  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
   followUser: (data: { followerId: string; followingId: string }) => Promise<void>;
   unfollowUser: (data: { followerId: string; followingId: string }) => Promise<void>;
 };

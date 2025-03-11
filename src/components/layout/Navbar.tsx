@@ -65,13 +65,13 @@ const Navbar = () => {
                     className="flex items-center gap-x-1"
                   >
                     <Image
-                      src={loggedInProfile.image}
+                      src={loggedInProfile.profile.image}
                       alt="Profile"
                       width={40}
                       height={40}
                       className="rounded-full border-2 border-blue-500 shadow-md object-cover"
                     />
-                    <p className="text-xl">{loggedInProfile?.user.username}</p>
+                    <p className="text-xl">{loggedInProfile.username}</p>
                   </Link>
                 ) : (
                   <Link href="/auth/login">

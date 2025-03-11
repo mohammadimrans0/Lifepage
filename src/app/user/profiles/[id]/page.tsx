@@ -34,15 +34,15 @@ const ProfilePage = () => {
         {/* Profile Header */}
         <div className="flex items-center space-x-2 md:space-x-8">
           <Image
-            src={profile.image}
+            src={profile.profile.image}
             alt="Profile"
             width={160}
             height={0}
             className="rounded-full w-[150px] h-[150px] lg:w-[200px] lg:h-[200px] border-4 border-blue-300 shadow-md object-cover"
           />
           <div className="flex flex-col">
-            <h1 className="text-3xl font-semibold">{profile?.user.username}</h1>
-            <p className="mt-1">{profile.name}</p>
+            <h1 className="text-3xl font-semibold">{profile.username}</h1>
+            <p className="mt-1">{profile.profile.name}</p>
             <div className="flex items-center mt-1">
               <span className="font-semibold mr-1">{userPosts.length}</span>{" "}
               Posts
@@ -50,20 +50,20 @@ const ProfilePage = () => {
             <div className="flex flex-wrap space-x-4 mt-2">
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
-                  {profile.followers_count}
+                  {profile.profile.followers_count}
                 </span>{" "}
                 Followers
               </div>
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
-                  {profile.following_count}
+                  {profile.profile.following_count}
                 </span>{" "}
                 Following
               </div>
             </div>
 
             <div className="mt-2">
-              <p>{profile.bio}</p>
+              <p>{profile.profile.bio}</p>
             </div>
 
             <div className="flex space-x-2 mt-4">

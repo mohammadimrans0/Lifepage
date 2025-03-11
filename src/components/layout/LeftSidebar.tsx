@@ -20,14 +20,14 @@ export default function LeftSidebar() {
         {loggedInProfile ? (
           <div className="flex flex-col items-center gap-y-2">
             <Image
-              src={loggedInProfile.image}
+              src={loggedInProfile.profile.image}
               alt="profile image"
               width={64}
               height={64}
               className="rounded-full"
             />
-            <h1 className="text-xl font-semibold">{loggedInProfile.name}</h1>
-            <p className="text-sm text-gray-600">{loggedInProfile.bio}</p>
+            <h1 className="text-xl font-semibold">{loggedInProfile.profile.name}</h1>
+            <p className="text-sm text-gray-600">{loggedInProfile.profile.bio}</p>
 
             <div className="flex items-center justify-between gap-x-6 mt-2">
               <div className="text-center">
@@ -36,13 +36,13 @@ export default function LeftSidebar() {
               </div>
               <div className="text-center">
                 <span className="font-semibold">
-                  {loggedInProfile.followers_count}
+                  {loggedInProfile.profile.followers_count}
                 </span>
                 <p className="text-xs">Followers</p>
               </div>
               <div className="text-center">
                 <span className="font-semibold">
-                  {loggedInProfile.following_count}
+                  {loggedInProfile.profile.following_count}
                 </span>
                 <p className="text-xs">Following</p>
               </div>

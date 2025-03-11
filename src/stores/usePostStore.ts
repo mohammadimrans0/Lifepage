@@ -25,8 +25,10 @@ interface Comment {
   id: string;
   post: string;
   userDetails: {
-    name: string;
-    image: string;
+    profile:{
+      name: string;
+      image: string;
+    }
   };
   comment: string;
   created_at: string;

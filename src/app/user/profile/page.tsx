@@ -11,7 +11,7 @@ import { usePostStore } from "@/stores/usePostStore";
 
 const LoggedInUserProfilePage = () => {
   const { userId, loggedInProfile, fetchLoggedInProfile } = useUserStore();
-  const { userPosts } = usePostStore(); 
+  const { userPosts } = usePostStore();
   const [activeTab, setActiveTab] = useState("posts");
   const router = useRouter();
 
@@ -33,15 +33,15 @@ const LoggedInUserProfilePage = () => {
         {/* Profile Header */}
         <div className="flex items-center space-x-2 md:space-x-8">
           <Image
-            src={loggedInProfile.image}
+            src={loggedInProfile.profile.image}
             alt="Profile"
             width={160}
             height={0}
             className="rounded-full w-[150px] h-[150px] lg:w-[200px] lg:h-[200px] border-4 border-blue-300 shadow-md object-cover"
           />
           <div className="flex flex-col">
-            <h1 className="text-3xl font-semibold">{loggedInProfile?.user.username}</h1>
-            <p className="mt-1">{loggedInProfile.name}</p>
+            <h1 className="text-3xl font-semibold">{loggedInProfile.username}</h1>
+            <p className="mt-1">{loggedInProfile.profile.name}</p>
             <div className="flex items-center mt-1">
                 <span className="font-semibold mr-1">
                 {userPosts.length}
@@ -51,20 +51,20 @@ const LoggedInUserProfilePage = () => {
             <div className="flex flex-wrap space-x-4 mt-2">
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
-                  {loggedInProfile.followers_count}
+                  {loggedInProfile.profile.followers_count}
                 </span>{" "}
                 Followers
               </div>
               <div className="flex items-center">
                 <span className="font-semibold mr-1">
-                  {loggedInProfile.following_count}
+                  {loggedInProfile.profile.following_count}
                 </span>{" "}
                 Following
               </div>
             </div>
 
             <div className="mt-2">
-              <p>{loggedInProfile.bio}</p>
+              <p>{loggedInProfile.profile.bio}</p>
             </div>
 
           </div>

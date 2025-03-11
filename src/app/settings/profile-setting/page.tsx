@@ -82,7 +82,7 @@ const ProfileSettingPage = () => {
         {/* Profile Image */}
         <div className="flex justify-center">
           <Image
-            src={profile.image}
+            src={profile.profile.image}
             alt="Profile"
             width={200}
             height={200}
@@ -97,25 +97,25 @@ const ProfileSettingPage = () => {
               Username
             </label>
             <p className="ml-4">
-              {renderEditableField("username", profile?.user.username)}
+              {renderEditableField("username", profile.username)}
             </p>
           </div>
           <div className="flex items-center border-b">
             <label className="font-semibold border-r px-4 py-6 w-32">
               Name
             </label>
-            <p className="ml-4">{renderEditableField("name", profile.name)}</p>
+            <p className="ml-4">{renderEditableField("name", profile.profile.name)}</p>
           </div>
           <div className="flex items-center border-b">
             <label className="font-semibold border-r px-4 py-6 w-32">Bio</label>
-            <p className="ml-4">{renderEditableField("bio", profile.bio)}</p>
+            <p className="ml-4">{renderEditableField("bio", profile.profile.bio)}</p>
           </div>
           <div className="flex items-center border-b">
             <label className="font-semibold border-r px-4 py-6 w-32">
               Email
             </label>
             <p className="ml-4">
-              {renderEditableField("email", profile?.user.email)}
+              {renderEditableField("email", profile.email)}
             </p>
           </div>
           <div className="flex items-center border-b">
@@ -123,7 +123,7 @@ const ProfileSettingPage = () => {
               Contact Info
             </label>
             <p className="ml-4">
-              {renderEditableField("contact_info", profile.contact_info)}
+              {renderEditableField("contact_info", profile.profile.contact_info)}
             </p>
           </div>
         </div>

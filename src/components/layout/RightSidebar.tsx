@@ -43,23 +43,23 @@ export default function RightSidebar() {
         <div className="mb-8">
           {allProfiles.slice(0, 10).map((profile, index) => (
             <div key={profile.id || `profile-${index}`} className="flex items-center justify-between py-2">
-              <Link href={`/user/profiles/${profile?.user.id}`} className="flex items-center gap-3 cursor-pointer">
+              <Link href={`/user/profiles/${profile.id}`} className="flex items-center gap-3 cursor-pointer">
                 <Image
-                  src={profile.image || "/default-avatar.png"}
-                  alt={profile?.user.username || "User Avatar"}
+                  src={profile.profile.image || "/default-avatar.png"}
+                  alt={profile.username || "User Avatar"}
                   width={40}
                   height={40}
                   className="rounded-full object-cover"
                 />
-                <span className="font-medium">{profile?.user.username || "Unknown User"}</span>
+                <span className="font-medium">{profile.username || "Unknown User"}</span>
               </Link>
               <button
-                onClick={() => handleFollowToggle(profile?.user.id)}
+                onClick={() => handleFollowToggle(profile.id.toString())}
                 className={`px-4 py-1 border rounded-lg text-white ${
-                  isFollowing[profile?.user.id] ? "bg-gray-500" : "bg-blue-500"
+                  isFollowing[profile.id] ? "bg-gray-500" : "bg-blue-500"
                 }`}
               >
-                {isFollowing[profile?.user.id] ? "Unfollow" : "Follow"}
+                {isFollowing[profile.id] ? "Unfollow" : "Follow"}
               </button>
             </div>
           ))}
