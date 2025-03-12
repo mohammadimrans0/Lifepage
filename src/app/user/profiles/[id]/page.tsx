@@ -9,6 +9,7 @@ import BookMark from "@/components/user/profile/BookMark";
 import { Bookmark, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePostStore } from "@/stores/usePostStore";
+import Link from "next/link";
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -48,18 +49,24 @@ const ProfilePage = () => {
               Posts
             </div>
             <div className="flex flex-wrap space-x-4 mt-2">
-              <div className="flex items-center">
+              <Link
+                href={`/user/connections/${profile.id}`}
+                className="flex items-center"
+              >
                 <span className="font-semibold mr-1">
                   {profile.profile.followers_count}
                 </span>{" "}
                 Followers
-              </div>
-              <div className="flex items-center">
+              </Link>
+              <Link
+                href={`/user/connections/${profile.id}`}
+                className="flex items-center"
+              >
                 <span className="font-semibold mr-1">
                   {profile.profile.following_count}
                 </span>{" "}
                 Following
-              </div>
+              </Link>
             </div>
 
             <div className="mt-2">
@@ -109,13 +116,9 @@ const ProfilePage = () => {
         {/* Content Display */}
         <div>
           {activeTab === "posts" ? (
-            <div>
-              {userId && <UserPost userId={userId} />}
-            </div>
+            <div>{userId && <UserPost userId={userId} />}</div>
           ) : (
-            <div>
-              {userId && <BookMark userId={userId} />}
-            </div>
+            <div>{userId && <BookMark userId={userId} />}</div>
           )}
         </div>
       </div>

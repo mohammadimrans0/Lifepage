@@ -55,7 +55,7 @@ export default function LeftSidebar() {
 
       <div className="flex flex-col gap-y-2 mb-4">
         <SidebarLink href="/" src="/images/image-icon/home-feed.svg" label="Feed" />
-        <SidebarLink href="/connections" src="/images/image-icon/connections.svg" label="Connections" />
+        <SidebarLink href={`/user/connections/${loggedInProfile?.id}`} src="/images/image-icon/connections.svg" label="Connections" />
         <SidebarLink href="/latest-news" src="/images/image-icon/news.svg" label="Latest News" />
         <SidebarLink href="/settings/profile-setting" src="/images/image-icon/settings.svg" label="Settings" />
       </div>
